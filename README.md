@@ -1,1 +1,1 @@
-# itike.rw
+# Tike.rw
