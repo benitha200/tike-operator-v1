@@ -18,10 +18,14 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { useForm } from "react-hook-form";
+import { v4 as uuidV4 } from "uuid";
 
 import * as z from "zod";
 
 const formSchema = z.object({
+  fullname: z.string().min(6, {
+    message: "Fullname must be at least 6 characters.",
+  }),
   identifier: z.string().min(6, {
     message: "Email must be at least 6 characters.",
   }),
@@ -30,7 +34,7 @@ const formSchema = z.object({
   }),
 });
 
-export default function Login() {
+export default function Backdoor() {
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState<boolean>(false);
   const { push } = useRouter();
@@ -38,16 +42,19 @@ export default function Login() {
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
+      fullname: "",
       identifier: "",
       password: "",
     },
   });
 
-  const handleLogin = async (values: z.infer<typeof formSchema>) => {
+  const handleRegister = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
     setError(null);
     await axios
-      .post("https://api.tike.rw/login", {
+      .post("https://api.tike.rw/register", {
+        idempotency_key: uuidV4(),
+        fullname: values.fullname,
         identifier: values.identifier,
         password: values.password,
       })
@@ -91,14 +98,32 @@ export default function Login() {
               </div>
             ) : (
               <h2 className="text-2xl lg:text-3xl font-bold text-gray-900">
-                Login to your account
+                Register your account
               </h2>
             )}
             <Form {...form}>
               <form
-                onSubmit={form.handleSubmit(handleLogin)}
+                onSubmit={form.handleSubmit(handleRegister)}
                 className="mt-8 space-y-6"
               >
+                <FormField
+                  control={form.control}
+                  name="fullname"
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormLabel>Your fullname</FormLabel>
+                      <FormControl>
+                        <Input
+                          type="text"
+                          placeholder="Keza Majyambere"
+                          disabled={loading}
+                          {...field}
+                        />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
                 <FormField
                   control={form.control}
                   name="identifier"
@@ -144,8 +169,8 @@ export default function Login() {
                   )}
                 />
 
-                <Button type="submit" disabled={loading}>
-                  {loading ? `Logging in...` : `Login`}
+                <Button type="submit">
+                  {loading ? `Registering...` : `Register`}
                 </Button>
               </form>
             </Form>
