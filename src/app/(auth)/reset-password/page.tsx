@@ -40,6 +40,7 @@ export default function ResetPassword({ query }: any) {
     let arrIdentifier = searchParams.get("identifier")?.split(" ");
     let newIdentifier = arrIdentifier?.join("+");
     setIdentifier(newIdentifier);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const form = useForm<z.infer<typeof formSchema>>({
