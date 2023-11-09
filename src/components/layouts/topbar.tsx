@@ -1,6 +1,5 @@
 "use client";
-import { Avatar, Dropdown, Navbar } from "flowbite-react";
-import Image from "next/image";
+
 interface Props {}
 
 function Topbar(props: Props) {
@@ -8,7 +7,7 @@ function Topbar(props: Props) {
 
   return (
     <>
-      <Navbar
+      {/* <Navbar
         fluid={true}
         rounded={true}
         className="bg-white border-b border-gray-200 fixed z-30 w-full px-3 py-3"
@@ -37,7 +36,7 @@ function Topbar(props: Props) {
           <Dropdown.Divider />
           <Dropdown.Item>Sign out</Dropdown.Item>
         </Dropdown>
-      </Navbar>
+      </Navbar> */}
     </>
   );
 }
