@@ -47,7 +47,7 @@ export default function Login() {
     setLoading(true);
     setError(null);
     await axios
-      .post("https://api.tike.rw/login", {
+      .post("http://127.0.0.1:3000/login/", {
         identifier: values.identifier,
         password: values.password,
       })

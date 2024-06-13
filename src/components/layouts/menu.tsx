@@ -20,6 +20,15 @@ interface Props {}
 function Menu(props: Props) {
   const {} = props;
 
+  function handleLogout() {
+    document.cookie.split(";").forEach((c) => {
+      document.cookie = c
+        .replace(/^ +/, "")
+        .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
+    });
+    window.location.reload();
+  }
+
   return (
     <>
       <aside
@@ -94,7 +103,7 @@ function Menu(props: Props) {
                     <span className="ml-3">Bookings</span>
                   </Link>
                 </li>
-                <li>
+                {/* <li>
                   <Link
                     href="/coupons"
                     className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75"
@@ -111,7 +120,7 @@ function Menu(props: Props) {
                     <BsShieldCheck />
                     <span className="ml-3">Insurances</span>
                   </Link>
-                </li>
+                </li> */}
               </ul>
               <div className="space-y-2 pt-2">
                 <Link
@@ -129,12 +138,20 @@ function Menu(props: Props) {
                   <span className="ml-3">Settings</span>
                 </Link>
                 <Link
+                  href="/login"
+                  className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75"
+                  onClick={handleLogout}
+                >
+                  <FiUser />
+                  <span className="ml-3">Logout</span>
+                </Link>
+                {/* <Link
                   href="/profile"
                   className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75"
                 >
                   <FiUser />
                   <span className="ml-3">Profile</span>
-                </Link>
+                </Link> */}
                 <Link
                   href="/help"
                   className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75"
