@@ -35,14 +35,14 @@ export default function NewTrip() {
       arrival_location: arrivalLocation,
       arrival_time: new Date(`2024-03-19T${arrivalTime}`),
       price: price,
-      operator: "da3cc03a-4c9b-427c-8ac9-5f7b9107aa97",
+      operator: "0ea45abe-2164-46b8-ab96-2ac4d1e43554",
       idempotency_key:idempotencyKey,
       car:selectedCar,
     };
     
 
     try {
-      const response = await fetch("http://127.0.0.1:3000/trips/", {
+      const response = await fetch("http://127.0.0.1:3010/trips/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -60,30 +60,6 @@ export default function NewTrip() {
     }
   };
 
-  // const departure = [
-  //   "Bweyeye",
-  //   "Shyorongi",
-  //   "Karumuna",
-  //   "Rulindo",
-  //   "Nyagatare",
-  //   "Butare",
-  //   "Kirehe",
-  //   "Musanze",
-  //   "Nyanza",
-  //   "Nyabugogo",
-  // ];
-  // const arrival = [
-  //   "Nyabugogo",
-  //   "Nyanza",
-  //   "Musanze",
-  //   "Kirehe",
-  //   "Butare",
-  //   "Nyagatare",
-  //   "Rulindo",
-  //   "Karumuna",
-  //   "Shyorongi",
-  //   "Bweyeye",
-  // ];
   function get_cars(){
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
@@ -94,7 +70,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch("http://127.0.0.1:3000/cars/", requestOptions)
+    fetch("http://127.0.0.1:3010/cars/", requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         console.log(result)
@@ -113,7 +89,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch("http://127.0.0.1:3000/drivers/", requestOptions)
+    fetch("http://127.0.0.1:3010/drivers/", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
@@ -133,7 +109,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch("http://127.0.0.1:3000/locations/", requestOptions)
+    fetch("http://127.0.0.1:3010/locations/", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)

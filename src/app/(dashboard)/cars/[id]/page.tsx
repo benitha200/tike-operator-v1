@@ -20,7 +20,7 @@ export default function ViewCar() {
       headers: myHeaders,
     };
 
-    fetch(`http://127.0.0.1:3000/cars/${carId}/`, requestOptions)
+    fetch(`http://127.0.0.1:3010/cars/${carId}/`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{
         setCar(result.payload);
@@ -49,7 +49,7 @@ export default function ViewCar() {
       body: JSON.stringify(car)
     };
 
-    fetch(`http://127.0.0.1:3000/cars/${car.id}/`, requestOptions)
+    fetch(`http://127.0.0.1:3010/cars/${car.id}/`, requestOptions)
       .then((response) => response.json())
       .then((result) => console.log(result))
       .catch((error) => console.error(error));

@@ -20,7 +20,7 @@ export default function Cars() {
 
     const fetchData = async () => {
       try {
-        const response = await fetch("http://127.0.0.1:3000/cars/", requestOptions);
+        const response = await fetch("http://127.0.0.1:3010/cars/", requestOptions);
         const data = await response.json();
         setCars(data.payload);
       } catch (error) {

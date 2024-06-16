@@ -21,7 +21,7 @@
 //       body: raw,
 //     };
 
-//     fetch("http://127.0.0.1:3000/travelers/", requestOptions)
+//     fetch("http://127.0.0.1:3010/travelers/", requestOptions)
 //       .then((response) => response.json())
 //       .then((result) => {
 //         setTravelers(result)
@@ -151,7 +151,7 @@ export default function Travelers() {
       headers: myHeaders,
     };
 
-    fetch("http://127.0.0.1:3000/travelers/", requestOptions)
+    fetch("http://127.0.0.1:3010/travelers/", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setTravelers(result.payload);

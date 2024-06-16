@@ -96,7 +96,7 @@ export default function NewLocation() {
     };
 
     try {
-      const response = await fetch("http://127.0.0.1:3000/locations/", requestOptions);
+      const response = await fetch("http://127.0.0.1:3010/locations/", requestOptions);
       const result = await response.json();
       console.log(result);
     } catch (error) {

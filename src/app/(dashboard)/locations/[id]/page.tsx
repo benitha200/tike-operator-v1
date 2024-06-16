@@ -27,7 +27,7 @@ export default function EditLocation() {
     };
 
     fetch(
-      `http://127.0.0.1:3000/locations/${locationId}`,
+      `http://127.0.0.1:3010/locations/${locationId}`,
       requestOptions
     )
       .then((response) => response.json())
@@ -61,7 +61,7 @@ export default function EditLocation() {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:3000/locations/${location.id}`,
+        `http://127.0.0.1:3010/locations/${location.id}`,
         requestOptions
       );
       const result = await response.json();

@@ -65,7 +65,8 @@ export default function NewCar({}) {
       "immatriculation_no": carNo,
       "brand": brand,
       "model": model,
-      "type": type
+      "type": type,
+      "operator": "0ea45abe-2164-46b8-ab96-2ac4d1e43554",
     });
 
     const requestOptions = {
@@ -74,7 +75,7 @@ export default function NewCar({}) {
       body: raw,
     };
 
-    fetch("http://127.0.0.1:3000/cars/", requestOptions)
+    fetch("http://127.0.0.1:3010/cars/", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
@@ -107,7 +108,7 @@ export default function NewCar({}) {
     // };
   
     // try {
-    //   const response = await fetch("http://127.0.0.1:3000/cars/", requestOptions);
+    //   const response = await fetch("http://127.0.0.1:3010/cars/", requestOptions);
     //   const result = await response.json();
     //   console.log(result);
     // } catch (error) {

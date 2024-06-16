@@ -47,7 +47,7 @@ export default function Login() {
     setLoading(true);
     setError(null);
     await axios
-      .post("http://127.0.0.1:3000/login/", {
+      .post("http://127.0.0.1:3010/login/", {
         identifier: values.identifier,
         password: values.password,
       })
