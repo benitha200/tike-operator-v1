@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { v4 as uuidv4 } from 'uuid';
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function NewTrip() {
 
@@ -35,7 +37,7 @@ export default function NewTrip() {
       arrival_location: arrivalLocation,
       arrival_time: new Date(`2024-03-19T${arrivalTime}`),
       price: price,
-      operator: "0ea45abe-2164-46b8-ab96-2ac4d1e43554",
+      operator: "89699bac-479a-4025-b410-11db53068ce1",
       idempotency_key:idempotencyKey,
       car:selectedCar,
     };
@@ -55,8 +57,10 @@ export default function NewTrip() {
       }
       const data = await response.json();
       console.log(data);
+      toast.success("Trip added successfully")
     } catch (error) {
       console.error(error);
+      toast.error("Error occured during adding trip")
     }
   };
 
@@ -316,6 +320,7 @@ export default function NewTrip() {
           </div>
         </div>
       </form>
+      <ToastContainer/>
     </>
   );
 }

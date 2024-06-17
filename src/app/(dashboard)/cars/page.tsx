@@ -108,6 +108,19 @@ export default function Cars() {
                       </td>
                     </tr>
                   ))}
+                  {cars && cars.length > 0 ? (
+                      // Render the list of cars here, for example:
+                      cars.map(car => (
+                        <tr>
+                          <td></td>
+                        </tr>
+                      ))
+                    ) : (
+                      <tr>
+                        <td colSpan={3}><center>No Cars Recorded</center></td>
+                      </tr>
+                    )}
+
                 </tbody>
               </table>
             </div>

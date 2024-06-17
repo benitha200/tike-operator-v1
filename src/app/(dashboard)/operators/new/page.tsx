@@ -298,7 +298,7 @@ const formSchema = z.object({
     .email({ message: "Invalid email format." }),
   password: z
     .string()
-    .min(6, { message: "Password must be at least 6 characters." }),
+    .min(6, { message: "Password must be at least 8 characters." }),
 });
 
 const MAX_RETRIES = 5; // Set a reasonable retry limit
@@ -421,7 +421,7 @@ export default function NewOperator() {
     <>
       {showSuccessToast && (
         <CustomToast
-          message="Form submitted successfully!"
+          message="Operator registered successfully!"
           type="success"
           onClose={() => setShowSuccessToast(false)}
         />
@@ -448,6 +448,7 @@ export default function NewOperator() {
               Save
             </button>
           </div>
+          
           <FormField
             control={form.control}
             name="name"
