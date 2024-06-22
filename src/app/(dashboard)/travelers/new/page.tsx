@@ -1,16 +1,16 @@
 "use client"
-import { useState } from "react";
+import { useState,FormEvent } from "react";
 import { FiCheck } from "react-icons/fi";
 import { v4 as uuidv4 } from 'uuid';
 
 export default function NewTraveler() {
 
-  const [fullname,setFullname]=useState();
-  const [email,setEmail]=useState();
-  const [password,setPassword]=useState();
+  const [fullname,setFullname]=useState("");
+  const [email,setEmail]=useState("");
+  const [password,setPassword]=useState("");
 
 
-  function handleSubmit(e){
+  function handleSubmit(e: FormEvent<HTMLFormElement>){
        e.preventDefault();
        const myHeaders = new Headers();
       myHeaders.append("Content-Type", "application/json");

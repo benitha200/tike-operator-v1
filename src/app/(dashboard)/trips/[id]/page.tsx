@@ -4,15 +4,16 @@ import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Trip } from "../interfaces";
 import { Driver } from "../interfaces";
+import { Location } from "../interfaces";
 
 export default function ViewTrip() {
 
   const [trip, setTrip] = useState<Trip | null>(null);
   const [cars,setCars]=useState();
-  const [selectedCar,setSelectedCar]=useState();
-  const [selectedDriver,setSelectedDriver]=useState();
-  const [drivers,setDrivers]=useState([])
-  const [locations,setLocations]=useState();
+  const [selectedCar,setSelectedCar]=useState<string>("");
+  const [selectedDriver,setSelectedDriver]=useState<string>("");
+  const [drivers,setDrivers]=useState<Driver[]>([])
+  const [locations,setLocations]=useState<Location[]>([]);
   const [departureLocation, setDepartureLocation] = useState("");
   const [arrivalLocation, setArrivalLocation] = useState("");
 
@@ -323,7 +324,9 @@ export default function ViewTrip() {
                 type="time"
                 id="address"
                 // placeholder="Nyabugogo"
-                value={trip && trip.departure_time}
+                value={trip && trip.departure_time 
+                  || ''
+                }
                 
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
@@ -358,7 +361,7 @@ export default function ViewTrip() {
                 id="address"
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
-                value={trip && trip.price}
+                value={trip && trip.price || ''}
                 // onChange={}
               />
             </div>

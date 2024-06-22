@@ -116,9 +116,10 @@ import { useEffect, useState } from "react";
 import Link from "next/link";
 import { FiEdit, FiPlus, FiTrash } from "react-icons/fi";
 import Cookies from "js-cookie";
+import { Operator } from "../alltrips/interfaces";
 
 export default function Operators() {
-  const [operators, setOperators] = useState([]);
+  const [operators, setOperators] = useState<Operator[]>([]);
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
@@ -212,7 +213,7 @@ export default function Operators() {
                 <tbody className="bg-white divide-y divide-gray-200">
                   {loading ? (
                     <tr>
-                      <td colSpan="5" className="p-4 text-center">
+                      <td colSpan={5} className="p-4 text-center">
                         Loading...
                       </td>
                     </tr>

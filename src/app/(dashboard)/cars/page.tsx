@@ -4,9 +4,10 @@ import Cookies from "js-cookie";
 import React, { useState, useEffect } from "react";
 import { FiEdit, FiPlus, FiTrash } from "react-icons/fi";
 import { TbLiveView } from "react-icons/tb";
+import { Car } from "../trips/interfaces";
 
 export default function Cars() {
-  const [cars, setCars] = useState([]);
+  const [cars, setCars] = useState<Car[]>([]);
 
   useEffect(() => {
     const myHeaders = new Headers();

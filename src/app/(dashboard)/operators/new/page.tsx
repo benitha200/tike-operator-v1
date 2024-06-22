@@ -410,7 +410,7 @@ export default function NewOperator() {
       form.reset(); // Reset form after submission
     } catch (error) {
       console.error(error);
-      setError("An error occurred while submitting the form. " + error.message);
+      setError("An error occurred while submitting the form. ");
       setShowErrorToast(true);
     } finally {
       setLoading(false);

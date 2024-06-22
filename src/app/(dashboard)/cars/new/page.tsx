@@ -18,14 +18,14 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-export const carFormSchema = z.object({
-  idempotency_key: z.string().min(2, { message: 'Idempotency key must be at least 2 characters.' }),
-  car_no: z.string().min(2, { message: 'Car number must be at least 2 characters.' }),
-  immatriculation_no: z.string().min(2, { message: 'Immatriculation number must be at least 2 characters.' }),
-  brand: z.string().min(2, { message: 'Brand must be at least 2 characters.' }),
-  model: z.string().min(2, { message: 'Model must be at least 2 characters.' }),
-  type: z.string().min(2, { message: 'Type must be at least 2 characters.' }),
-});
+// export const carFormSchema = z.object({
+//   idempotency_key: z.string().min(2, { message: 'Idempotency key must be at least 2 characters.' }),
+//   car_no: z.string().min(2, { message: 'Car number must be at least 2 characters.' }),
+//   immatriculation_no: z.string().min(2, { message: 'Immatriculation number must be at least 2 characters.' }),
+//   brand: z.string().min(2, { message: 'Brand must be at least 2 characters.' }),
+//   model: z.string().min(2, { message: 'Model must be at least 2 characters.' }),
+//   type: z.string().min(2, { message: 'Type must be at least 2 characters.' }),
+// });
 
 export default function NewCar({}) {
   const [loading, setLoading] = useState<boolean>(false);
@@ -33,12 +33,12 @@ export default function NewCar({}) {
 
   // form data
 
-  const [brand,setBrand]=useState();
-  const [model,setModel]=useState();
-  const [carNo,setCarNo]=useState();
-  const [type,setType]=useState();
-  const [pseats,setPseats]=useState();
-  const [wseats,setWseats]=useState();
+  const [brand,setBrand]=useState<string>("");
+  const [model,setModel]=useState<string>("");
+  const [carNo,setCarNo]=useState<string>("");
+  const [type,setType]=useState<string>("");
+  const [pseats,setPseats]=useState<string>("");
+  const [wseats,setWseats]=useState<string>("");
 
 
   function handleSubmit() {

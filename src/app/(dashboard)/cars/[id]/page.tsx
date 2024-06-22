@@ -2,10 +2,29 @@
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
+import * as z from 'zod';
+
+type CarForm = {
+  id:string;
+  idempotency_key: string;
+  car_no: string;
+  immatriculation_no: string;
+  brand: string;
+  model: string;
+  type: string;
+};
 
 export default function ViewCar() {
 
-  const [car,setCar]=useState({});
+  const [car, setCar] = useState<CarForm>({
+    id:'',
+    idempotency_key: '',
+    car_no: '',
+    immatriculation_no: '',
+    brand: '',
+    model: '',
+    type: '',
+  });
 
   useEffect(()=>{
     const currentUrl = window.location.href;
@@ -28,16 +47,15 @@ export default function ViewCar() {
       .catch((error) => console.error(error));  
   },[]);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
     setCar((prevCar) => ({
       ...prevCar,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");

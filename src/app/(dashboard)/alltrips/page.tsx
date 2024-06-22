@@ -4,9 +4,10 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import { useEffect, useState } from "react";
 import { FiEdit, FiPlus, FiTrash } from "react-icons/fi";
+import { Trip } from "./interfaces";
 
 export default function Trips() {
-  const [trips, setTrips] = useState([]);
+  const [trips, setTrips] = useState<Trip[]>([]);
 
   useEffect(() => {
     const myHeaders = new Headers();
@@ -15,7 +16,6 @@ export default function Trips() {
     const requestOptions = {
       method: "GET",
       headers: myHeaders,
-      // redirect: "follow"
     };
 
     fetch("http://127.0.0.1:3010/trips/", requestOptions)

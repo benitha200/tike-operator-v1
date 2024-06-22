@@ -39,3 +39,19 @@ export interface Location {
     driver: Driver;
   }
   
+  export interface Operator{
+    id:string;
+    name:string;
+    fullname:string;
+    representative_name:string;
+    representative_phone:string;
+    support_phone:string;
+  
+  }
+
+export interface Traveller{
+  id:string;
+  fullname:string;
+  phone_number:string;
+  email:string;
+}

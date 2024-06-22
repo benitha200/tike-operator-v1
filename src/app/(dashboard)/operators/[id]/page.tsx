@@ -2,9 +2,11 @@
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
+import { ChangeEvent,FormEvent } from "react";
+import { Driver, Operator } from "../../alltrips/interfaces";
 
 export default function ViewDriver() {
-  const [data, setData] = useState(null);
+  const [data, setData] = useState<Operator>();
   const [formData, setFormData] = useState({
     fullname: "",
     gender: "",
@@ -32,7 +34,7 @@ export default function ViewDriver() {
       fetch(`http://127.0.0.1:3010/drivers/${driverId}`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
-          setData(result);
+          setData(result.payload);
           setFormData(result.payload); // Set form data
         })
         .catch((error) => console.error(error));
@@ -41,16 +43,21 @@ export default function ViewDriver() {
     getOneDriver();
   }, []);
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     const { name, value } = e.target;
     setFormData((prevData) => ({
       ...prevData,
-      [name]: value
+      [name]: value,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
+    if (!data || !data.id) {
+      console.error("Data is undefined or missing required id property");
+      return;
+    }
 
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
@@ -67,12 +74,13 @@ export default function ViewDriver() {
       .then((result) => console.log(result))
       .catch((error) => console.error(error));
   };
+
   return (
     <>
     <form onSubmit={handleSubmit}>
           <div className="flex justify-between items-center p-5 bg-white border-b border-gray-200">
             <h2 className="text-xl font-semibold">
-              Edit Driver: {data && data.payload.fullname}
+              Edit Driver: {data && data.fullname}
             </h2>
             <button
               type="submit"

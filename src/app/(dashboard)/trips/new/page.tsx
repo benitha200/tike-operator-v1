@@ -1,29 +1,31 @@
 "use client"
 import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
+import { useEffect, useState,FormEvent } from "react";
 import { FiCheck } from "react-icons/fi";
 import { v4 as uuidv4 } from 'uuid';
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import { Car, Driver } from "../interfaces";
+import { Location } from "../../alltrips/interfaces";
 
 export default function NewTrip() {
 
-  const [cars,setCars]=useState();
-  const [drivers,setDrivers]=useState();
-  const [locations,setLocations]=useState();
+  const [cars,setCars]=useState<Car[]>([]);
+  const [drivers,setDrivers]=useState<Driver[]>([]);
+  const [locations,setLocations]=useState<Location[]>([]);
 
   // form data 
   const [selectedCar,setSelectedCar]=useState("");
-  const [selectedDriver,setSelectedDriver]=useState();
+  const [selectedDriver,setSelectedDriver]=useState<string>("");
   const [departureLocation, setDepartureLocation] = useState("");
-  const [departureTime, setDepartureTime] = useState();
+  const [departureTime, setDepartureTime] = useState("");
   const [arrivalLocation, setArrivalLocation] = useState("");
   const [arrivalTime, setArrivalTime] = useState("");
   const [price, setPrice] = useState("");
   const [operator, setOperator] = useState("");
 
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     console.log(Cookies.get('token'))
     e.preventDefault();
     const idempotencyKey = uuidv4();
