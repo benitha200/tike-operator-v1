@@ -278,11 +278,11 @@ function Cars() {
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
   // Handle search input change
-  const handleSearchChange = (event: React.FormEvent<HTMLFormElement>) => {
-    setSearchTerm(event.target.value);
-    // setSearchTerm(inputElement.value);
-    setCurrentPage(1); // Reset to first page when searching
-  }
+  // const handleSearchChange = (event: React.FormEvent<HTMLFormElement>) => {
+  //   setSearchTerm(event.target.value);
+  //   // setSearchTerm(inputElement.value);
+  //   setCurrentPage(1); // Reset to first page when searching
+  // }
   
 
   return (
@@ -297,7 +297,7 @@ function Cars() {
             className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
             placeholder="Search for Booking"
             value={searchTerm}
-            onChange={handleSearchChange} // Use the corrected event handler
+            // onChange={handleSearchChange} // Use the corrected event handler
           />
           </div>
         </form>

@@ -18,6 +18,8 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { toast,ToastContainer } from 'react-toastify';
+import 'react-toastify/dist/ReactToastify.css';
+
 
 const formSchema = z.object({
   fullname: z.string().min(2, { message: 'Fullname must be at least 2 characters.' }),
