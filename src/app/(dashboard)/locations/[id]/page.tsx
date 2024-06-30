@@ -2,10 +2,11 @@
 import { FiCheck } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
+import { Location } from "../../trips/interfaces";
 
 
 export default function EditLocation() {
-  const [location, setLocation] = useState(null);
+  const [location, setLocation] = useState<Location>();
   const [formData, setFormData] = useState({
     name: "",
     city: "",
@@ -15,6 +16,7 @@ export default function EditLocation() {
   const currentUrl = window.location.href;
   const urlParts = currentUrl.split('/');
   const locationId = urlParts[urlParts.length - 1];
+  const defaultLocation = { id: 'default' }; 
 
   useEffect(() => {
     const myHeaders = new Headers();
@@ -39,11 +41,11 @@ export default function EditLocation() {
       .catch((error) => console.error(error));
   }, [locationId]);
 
-  const handleChange = (e) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const myHeaders = new Headers();
@@ -61,7 +63,7 @@ export default function EditLocation() {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:3010/locations/${location.id}`,
+        `http://127.0.0.1:3010/locations/${(location || defaultLocation).id}`,
         requestOptions
       );
       const result = await response.json();

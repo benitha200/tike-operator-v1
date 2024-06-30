@@ -3,9 +3,10 @@ import Cookies from "js-cookie";
 import Link from "next/link";
 import { useState, useEffect } from "react";
 import { FiEdit, FiPlus, FiTrash } from "react-icons/fi";
+import { Location } from "../trips/interfaces";
 
 export default function Locations() {
-  const [data, setData] = useState([]);
+  const [data, setData] = useState<Location[]>([]);
 
   useEffect(() => {
     const get_all_locations = () => {
