@@ -31,28 +31,37 @@ export default function ViewCar() {
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
-  
-    setCar((prevCar) => ({
-      ...prevCar,
-      [name]: value, 
-    }));
+    
+    setCar((prevCar) => {
+      if (!prevCar) {
+        return { id: '', car_no: '', immatriculation_no: '', brand: '', model: '', type: '', [name]: value };
+      }
+      return {
+        ...prevCar,
+        [name]: value,
+      };
+    });
   };
   
-  
 
-  const handleSubmit = (e: React.ChangeEvent<HTMLInputElement>) => {
+  const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
+  
+    if (!car) {
+      console.error("Car data is not available");
+      return;
+    }
+  
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
-
+  
     const requestOptions = {
       method: "PATCH",
       headers: myHeaders,
       body: JSON.stringify(car)
     };
-
+  
     fetch(`http://127.0.0.1:3010/cars/${car.id}/`, requestOptions)
       .then((response) => response.json())
       .then((result) => console.log(result))
