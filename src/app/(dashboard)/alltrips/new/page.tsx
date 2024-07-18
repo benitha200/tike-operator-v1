@@ -4,7 +4,6 @@ import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { v4 as uuidv4 } from 'uuid';
 import { Car, Driver, Location } from "../interfaces";
-import { FormEvent } from "react";
 
 export default function NewTrip() {
 
@@ -14,16 +13,16 @@ export default function NewTrip() {
 
   // form data 
   const [selectedCar,setSelectedCar]=useState("");
-  const [selectedDriver,setSelectedDriver]=useState<string>('');
+  const [selectedDriver, setSelectedDriver] = useState<string | undefined>(undefined);
   const [departureLocation, setDepartureLocation] = useState("");
-  const [departureTime, setDepartureTime] = useState<string>('');
+  const [departureTime, setDepartureTime] = useState<string | undefined>(undefined);
   const [arrivalLocation, setArrivalLocation] = useState("");
   const [arrivalTime, setArrivalTime] = useState("");
   const [price, setPrice] = useState("");
   const [operator, setOperator] = useState("");
 
 
-  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleSubmit: React.FormEventHandler<HTMLFormElement> = async (e) => {
     console.log(Cookies.get('token'))
     e.preventDefault();
     const idempotencyKey = uuidv4();
@@ -208,7 +207,7 @@ export default function NewTrip() {
                 id="country"
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
-                value={selectedDriver}
+                value={selectedDriver ?? ""}
                 onChange={(e) => setSelectedDriver(e.target.value)}
               >
                 <option value="">Select Driver</option>

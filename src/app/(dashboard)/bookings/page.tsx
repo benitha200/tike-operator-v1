@@ -277,13 +277,10 @@ function Cars() {
   // Change page
   const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
 
-  // Handle search input change
-  // const handleSearchChange = (event: React.FormEvent<HTMLFormElement>) => {
-  //   setSearchTerm(event.target.value);
-  //   // setSearchTerm(inputElement.value);
-  //   setCurrentPage(1); // Reset to first page when searching
-  // }
-  
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setSearchTerm(e.target.value);
+  };
 
   return (
     <>
@@ -292,13 +289,13 @@ function Cars() {
         <form>
           <div className="sm:w-64 xl:w-96">
           <input
-            type="text"
-            name="text"
-            className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
-            placeholder="Search for Booking"
-            value={searchTerm}
-            // onChange={handleSearchChange} // Use the corrected event handler
-          />
+          type="text"
+          name="text"
+          className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+          placeholder="Search for Booking"
+          value={searchTerm}
+          onChange={handleSearchChange} // Corrected event handler
+        />
           </div>
         </form>
       </div>
