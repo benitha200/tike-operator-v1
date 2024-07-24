@@ -136,7 +136,7 @@ export default function Operators() {
           headers: myHeaders,
         };
 
-        const response = await fetch("http://127.0.0.1:3010/operators/", requestOptions);
+        const response = await fetch("https://api.tike.rw/operators/", requestOptions);
 
         if (!response.ok) {
           throw new Error(`Failed to fetch operators: ${response.statusText}`);

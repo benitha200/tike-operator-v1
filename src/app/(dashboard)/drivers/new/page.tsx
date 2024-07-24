@@ -76,7 +76,7 @@ export default function NewCar() {
         body:JSON.stringify(requestBody),
       };
 
-      const response = await fetch('http://127.0.0.1:3010/drivers/', requestOptions);
+      const response = await fetch('https://api.tike.rw/drivers/', requestOptions);
 
       if (!response.ok) {
         throw new Error(`Failed to submit the form: ${response.statusText}`);

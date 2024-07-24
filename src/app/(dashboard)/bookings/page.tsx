@@ -203,6 +203,7 @@ import { useEffect, useState } from "react";
 function Cars() {
     interface Bookings {
       id:string
+      payment_status:boolean
       departure_location: {
           id: string;
           name:string;
@@ -251,7 +252,7 @@ function Cars() {
       headers: myHeaders,
     };
 
-    fetch("http://127.0.0.1:3010/bookings/", requestOptions)
+    fetch("https://api.tike.rw/bookings/", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setBookings(result.payload);
@@ -294,7 +295,7 @@ function Cars() {
           className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
           placeholder="Search for Booking"
           value={searchTerm}
-          onChange={handleSearchChange} // Corrected event handler
+          onChange={handleSearchChange}
         />
           </div>
         </form>
@@ -343,6 +344,12 @@ function Cars() {
                     >
                       Price
                     </th>
+                    <th
+                      scope="col"
+                      className="p-4 text-left text-xs font-medium text-gray-500 uppercase"
+                    >
+                      Payment Status
+                    </th>
                     <th scope="col" className="p-4"></th>
                   </tr>
                 </thead>
@@ -381,6 +388,9 @@ function Cars() {
                       </td>
                       <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
                         {booking.price}
+                      </td>
+                      <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                        {booking.payment_status}
                       </td>
                       <td className="p-4 whitespace-nowrap space-x-2">
                         {/* <button

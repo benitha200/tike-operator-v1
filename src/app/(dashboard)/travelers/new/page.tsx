@@ -31,7 +31,7 @@ export default function NewTraveler() {
         // redirect: "follow"
       };
 
-      fetch("http://127.0.0.1:3010/register/", requestOptions)
+      fetch("https://api.tike.rw/register/", requestOptions)
         .then((response) => response.json())
         .then((result) => console.log(result))
         .catch((error) => console.error(error)); 

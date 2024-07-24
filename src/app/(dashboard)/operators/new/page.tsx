@@ -78,7 +78,7 @@
 //       };
 
 //       const response = await fetch(
-//         "http://127.0.0.1:3010/operators/",
+//         "https://api.tike.rw/operators/",
 //         requestOptions
 //       );
 
@@ -321,7 +321,7 @@ async function submitToOperators(values: z.infer<typeof formSchema>) {
     body: JSON.stringify(requestBody),
   };
 
-  const response = await fetch("http://127.0.0.1:3010/operators/", requestOptions);
+  const response = await fetch("https://api.tike.rw/operators/", requestOptions);
 
   if (!response.ok) {
     throw new Error(`Failed to submit to operators API: ${response.statusText}`);
@@ -355,7 +355,7 @@ async function submitToRegister(values: z.infer<typeof formSchema>, retries = 0)
   };
 
   try {
-    const response = await fetch("http://127.0.0.1:3010/register/", requestOptions);
+    const response = await fetch("https://api.tike.rw/register/", requestOptions);
     if (!response.ok) {
       const result = await response.json();
       if (
@@ -436,7 +436,7 @@ export default function NewOperator() {
       <Form {...form}>
         <form
           onSubmit={form.handleSubmit(handleSubmit)}
-          className="mt-8 space-y-6"
+          className="mt-8 space-y-6 p-5"
         >
           <div className="flex justify-between items-center p-5 bg-white border-b border-gray-200">
             <h2 className="text-xl font-semibold">Create New Operator</h2>

@@ -30,7 +30,7 @@ export default function ViewTrip() {
       // redirect: "follow"
     };
 
-    fetch("http://127.0.0.1:3010/locations/", requestOptions)
+    fetch("https://api.tike.rw/locations/", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
@@ -49,7 +49,7 @@ export default function ViewTrip() {
       headers: myHeaders
     };
 
-    fetch("http://127.0.0.1:3010/cars/", requestOptions)
+    fetch("https://api.tike.rw/cars/", requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         console.log(result)
@@ -73,7 +73,7 @@ export default function ViewTrip() {
       headers: myHeaders
     };
     
-    fetch(`http://127.0.0.1:3010/trips/${tripId}`, requestOptions)
+    fetch(`https://api.tike.rw/trips/${tripId}`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         setTrip(result.payload);
@@ -91,7 +91,7 @@ export default function ViewTrip() {
       // redirect: "follow"
     };
 
-    fetch("http://127.0.0.1:3010/drivers/", requestOptions)
+    fetch("https://api.tike.rw/drivers/", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)

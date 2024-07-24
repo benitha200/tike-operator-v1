@@ -18,7 +18,7 @@ export default function Locations() {
         headers: myHeaders,
       };
 
-      fetch("http://127.0.0.1:3010/locations/", requestOptions)
+      fetch("https://api.tike.rw/locations/", requestOptions)
         .then((response) => response.json())
         .then((result) => {
           setData(result.payload);
@@ -141,7 +141,7 @@ export default function Locations() {
 //         // redirect: "follow"
 //       };
 
-//       fetch("http://127.0.0.1:3010/locations/", requestOptions)
+//       fetch("https://api.tike.rw/locations/", requestOptions)
 //         .then((response) => response.json())
 //         .then((result) => {
 //           console.log(result)

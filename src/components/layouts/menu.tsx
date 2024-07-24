@@ -126,7 +126,7 @@ function Menu(props: Props) {
                   </ul>
 
                   <div className="space-y-2 pt-2">
-                    <Link
+                    {/* <Link
                       href="/reports"
                       className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75"
                     >
@@ -139,7 +139,7 @@ function Menu(props: Props) {
                     >
                       <FiSettings />
                       <span className="ml-3">Settings</span>
-                    </Link>
+                    </Link> */}
                     <Link
                       href="/login"
                       className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75"

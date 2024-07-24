@@ -43,7 +43,7 @@ export default function NewTrip() {
     
 
     try {
-      const response = await fetch("http://127.0.0.1:3010/trips/", {
+      const response = await fetch("https://api.tike.rw/trips/", {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +95,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch("http://127.0.0.1:3010/cars/", requestOptions)
+    fetch("https://api.tike.rw/cars/", requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         console.log(result)
@@ -114,7 +114,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch("http://127.0.0.1:3010/drivers/", requestOptions)
+    fetch("https://api.tike.rw/drivers/", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
@@ -134,7 +134,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch("http://127.0.0.1:3010/locations/", requestOptions)
+    fetch("https://api.tike.rw/locations/", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)

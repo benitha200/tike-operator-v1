@@ -31,7 +31,7 @@ export default function ViewDriver() {
         headers: myHeaders,
       };
 
-      fetch(`http://127.0.0.1:3010/drivers/${driverId}`, requestOptions)
+      fetch(`https://api.tike.rw/drivers/${driverId}`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
           setData(result.payload);
@@ -69,7 +69,7 @@ export default function ViewDriver() {
       body: JSON.stringify(formData),
     };
 
-    fetch(`http://127.0.0.1:3010/drivers/${data.id}`, requestOptions)
+    fetch(`https://api.tike.rw/drivers/${data.id}`, requestOptions)
       .then((response) => response.json())
       .then((result) => console.log(result))
       .catch((error) => console.error(error));

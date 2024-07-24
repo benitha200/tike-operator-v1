@@ -41,7 +41,7 @@ export default function ViewDriver() {
       };
 
       try {
-        const response = await fetch(`http://127.0.0.1:3010/drivers/${driverId}`, requestOptions);
+        const response = await fetch(`https://api.tike.rw/drivers/${driverId}`, requestOptions);
 
         if (!response.ok) {
           throw new Error(`Failed to fetch driver: ${response.statusText}`);
@@ -85,7 +85,7 @@ export default function ViewDriver() {
     };
 
     try {
-      const response = await fetch(`http://127.0.0.1:3010/drivers/${data.id}`, requestOptions);
+      const response = await fetch(`https://api.tike.rw/drivers/${data.id}`, requestOptions);
 
       if (!response.ok) {
         throw new Error(`Failed to update driver: ${response.statusText}`);

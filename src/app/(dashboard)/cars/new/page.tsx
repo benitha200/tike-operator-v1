@@ -64,7 +64,7 @@ export default function NewCar({}) {
       body: raw,
     };
 
-    fetch("http://127.0.0.1:3010/cars/", requestOptions)
+    fetch("https://api.tike.rw/cars/", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)

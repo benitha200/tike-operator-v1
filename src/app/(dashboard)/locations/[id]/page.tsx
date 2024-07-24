@@ -29,7 +29,7 @@ export default function EditLocation() {
     };
 
     fetch(
-      `http://127.0.0.1:3010/locations/${locationId}`,
+      `https://api.tike.rw/locations/${locationId}`,
       requestOptions
     )
       .then((response) => response.json())
@@ -63,7 +63,7 @@ export default function EditLocation() {
 
     try {
       const response = await fetch(
-        `http://127.0.0.1:3010/locations/${(location || defaultLocation).id}`,
+        `https://api.tike.rw/locations/${(location || defaultLocation).id}`,
         requestOptions
       );
       const result = await response.json();

@@ -19,7 +19,7 @@ export default function Trips() {
       // redirect: "follow"
     };
 
-    fetch("http://127.0.0.1:3010/trips/", requestOptions)
+    fetch("https://api.tike.rw/trips/", requestOptions)
       .then((response) => response.json())
       .then((result) => setTrips(result.payload))
       .catch((error) => console.error(error));

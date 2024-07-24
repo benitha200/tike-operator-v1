@@ -251,7 +251,7 @@ function Cars() {
       headers: myHeaders,
     };
 
-    fetch("http://127.0.0.1:3010/bookings/", requestOptions)
+    fetch("https://api.tike.rw/bookings/", requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setBookings(result.payload);
