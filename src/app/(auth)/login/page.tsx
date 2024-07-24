@@ -47,7 +47,7 @@ export default function Login() {
     setLoading(true);
     setError(null);
     await axios
-      .post("https://api.tike.rw/auth/login/", {
+      .post("https://api.tike.rw/login/", {
         identifier: values.identifier,
         password: values.password,
       })
