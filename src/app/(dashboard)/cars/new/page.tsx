@@ -42,11 +42,13 @@ export default function NewCar({}) {
   console.log(operatorId);
 
     useEffect(()=>{
-      console.log('=======',Cookies.get("currentUser"),'=======');
+      const data:any = Cookies.get('currentUser')
+      setCurrentUser(JSON.parse(data));
     },[])
 
 
-  function handleSubmit() {
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
@@ -68,7 +70,7 @@ export default function NewCar({}) {
       "brand": brand,
       "model": model,
       "type": type,
-      "operator": operatorId,
+      "operator": currentUser.operator.id,
     });
 
     const requestOptions = {
@@ -83,8 +85,7 @@ export default function NewCar({}) {
         console.log(result)
         toast.success("Car added successfully!");
       })
-      .catch((error) => console.error(error));
-      toast.error("An error occurred while adding the car.");
+      .catch((error) => console.error(error)); 
 
   };
 
