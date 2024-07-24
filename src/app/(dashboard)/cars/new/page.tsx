@@ -1,5 +1,5 @@
 "use client";
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import Cookies from 'js-cookie';
 import { v4 as uuidv4 } from 'uuid';
 import { useForm } from 'react-hook-form';
@@ -40,11 +40,32 @@ export default function NewCar({}) {
   const [pseats,setPseats]=useState<string>("");
   const [wseats,setWseats]=useState<string>("");
 
+  const userdata:any=Cookies.get('currentUser')
+  const currentUser = JSON.parse(userdata);
+
+      // Access the operator.id
+  const operatorId = currentUser.operator.id;
+
+  console.log("operator Id")
+  console.log(operatorId);
+
+    useEffect(()=>{
+      console.log('=======',Cookies.get("currentUser"),'=======');
+    },[])
+
 
   function handleSubmit() {
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
     myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
+
+      // // Parse the JSON string
+      // const currentUser = JSON.parse(${Cookies.get('token')});
+
+      // // Access the operator.id
+      // const operatorId = currentUser.operator.id;
+
+      // console.log(operatorId);
 
     
     const idempotencyKey = uuidv4();
@@ -55,7 +76,7 @@ export default function NewCar({}) {
       "brand": brand,
       "model": model,
       "type": type,
-      "operator": "0ea45abe-2164-46b8-ab96-2ac4d1e43554",
+      "operator": operatorId,
     });
 
     const requestOptions = {
@@ -95,7 +116,6 @@ export default function NewCar({}) {
                 htmlFor="brand"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
-                Brand Name
               </label>
               <input
                 type="text"
