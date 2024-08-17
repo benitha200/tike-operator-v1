@@ -18,15 +18,6 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-// export const carFormSchema = z.object({
-//   idempotency_key: z.string().min(2, { message: 'Idempotency key must be at least 2 characters.' }),
-//   car_no: z.string().min(2, { message: 'Car number must be at least 2 characters.' }),
-//   immatriculation_no: z.string().min(2, { message: 'Immatriculation number must be at least 2 characters.' }),
-//   brand: z.string().min(2, { message: 'Brand must be at least 2 characters.' }),
-//   model: z.string().min(2, { message: 'Model must be at least 2 characters.' }),
-//   type: z.string().min(2, { message: 'Type must be at least 2 characters.' }),
-// });
-
 export default function NewCar({}) {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
@@ -40,11 +31,12 @@ export default function NewCar({}) {
   const [pseats,setPseats]=useState<string>("");
   const [wseats,setWseats]=useState<string>("");
 
-  const userdata:any=Cookies.get('currentUser')
-  const currentUser = JSON.parse(userdata);
+  //const userdata:any=Cookies.get('currentUser')
+  //const currentUser = JSON.parse(userdata);
 
       // Access the operator.id
-  const operatorId = currentUser.operator.id;
+  //const operatorId = currentUser.operator.id || "null";
+   const operatorId="null";
 
   console.log("operator Id")
   console.log(operatorId);
