@@ -70,7 +70,7 @@ export default function NewCar({}) {
       "brand": brand,
       "model": model,
       "type": type,
-      "operator": currentUser.operator.id,
+      "operator": " 0ea45abe-2164-46b8-ab96-2ac4d1e43554",
     });
 
     const requestOptions = {
