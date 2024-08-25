@@ -374,24 +374,29 @@ function Cars() {
                       </td>
                       <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
                         <div className="text-base font-semibold text-gray-900">
-                          {booking.traveler.fullname}
+                          {booking?.traveler?.fullname}
                         </div>
                         <div className="text-sm font-normal text-gray-500">
-                          {booking.trip.departure_location.city} to {booking.trip.arrival_location.city}
-                        </div>
+                          {booking?.trip?.departure_location?.city} to {booking?.trip?.arrival_location?.city}
+                        </div>  
                       </td>
                       <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                        {booking.trip.departure_location.name}
+                        {booking?.trip?.departure_location?.name}
                       </td>
                       <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                        {booking.trip.arrival_location.name}
+                        {booking?.trip?.arrival_location?.name}
                       </td>
                       <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                        {booking.price}
+                        {booking?.price}
                       </td>
-                      <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                        {booking.payment_status}
+                      <td
+                        className={`p-4 whitespace-nowrap text-base font-medium ${
+                          booking?.payment_status ? "text-gray-900" : "text-red-600"
+                        }`}
+                      >
+                        {booking?.payment_status ? "Paid" : "Pending"}
                       </td>
+
                       <td className="p-4 whitespace-nowrap space-x-2">
                         {/* <button
                           type="button"

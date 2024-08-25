@@ -18,50 +18,41 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 
-export default function NewCar({}) {
+export default function NewCar() {
   const [loading, setLoading] = useState<boolean>(false);
   const [error, setError] = useState<string | null>(null);
 
   // form data
+  const [brand, setBrand] = useState<string>("");
+  const [model, setModel] = useState<string>("");
+  const [carNo, setCarNo] = useState<string>("");
+  const [type, setType] = useState<string>("");
+  const [pseats, setPseats] = useState<string>("");
+  const [wseats, setWseats] = useState<string>("");
 
-  const [brand,setBrand]=useState<string>("");
-  const [model,setModel]=useState<string>("");
-  const [carNo,setCarNo]=useState<string>("");
-  const [type,setType]=useState<string>("");
-  const [pseats,setPseats]=useState<string>("");
-  const [wseats,setWseats]=useState<string>("");
+  const [operatorId, setOperatorId] = useState<string>("null");
 
-  //const userdata:any=Cookies.get('currentUser')
-  //const currentUser = JSON.parse(userdata);
+  useEffect(() => {
+    const userdata = Cookies.get('currentUser');
+    if (userdata) {
+      const currentUser = JSON.parse(userdata);
+      setOperatorId(currentUser.operator?.id || "null");
+    }
+  }, []);
 
-      // Access the operator.id
-  //const operatorId = currentUser.operator.id || "null";
-   const operatorId="null";
-
-  console.log("operator Id")
+  console.log("operator Id");
   console.log(operatorId);
-
-    useEffect(()=>{
-      const data:any = Cookies.get('currentUser')
-      // setCurrentUser(JSON.parse(data));
-    },[])
-
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const myHeaders = new Headers();
     myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
-
-      // // Parse the JSON string
-      // const currentUser = JSON.parse(${Cookies.get('token')});
-
-      // // Access the operator.id
-      // const operatorId = currentUser.operator.id;
-
-      // console.log(operatorId);
-
-    
+  
+    const token = Cookies.get('token');
+    if (token) {
+      myHeaders.append("Authorization", `Bearer ${token}`);
+    }
+  
     const idempotencyKey = uuidv4();
     const raw = JSON.stringify({
       "idempotency_key": idempotencyKey,
@@ -70,23 +61,30 @@ export default function NewCar({}) {
       "brand": brand,
       "model": model,
       "type": type,
-      "operator": " 0ea45abe-2164-46b8-ab96-2ac4d1e43554",
+      "operator": operatorId,
     });
-
+  
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
       body: raw,
     };
-
-    fetch("https://api.tike.rw/cars/", requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result)
-        toast.success("Car added successfully!");
-      })
-      .catch((error) => console.error(error)); 
-
+  
+    try {
+      const response = await fetch("https://api.tike.rw/cars/", requestOptions);
+      if (!response.ok) {
+        throw new Error('Network response was not ok');
+      }
+      const result = await response.json();
+      console.log(result);
+      toast.success("Car added successfully!");
+      
+      // Redirect to "/cars" after successful addition
+      window.location.href = "/cars";
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to add car");
+    }
   };
 
   return (

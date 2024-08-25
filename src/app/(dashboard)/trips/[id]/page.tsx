@@ -168,15 +168,6 @@ export default function ViewTrip() {
               value={selectedCar} // Assuming selectedCar is the state variable holding the selected car value
               onChange={(e) => setSelectedCar(e.target.value)}
             >
-              {/* {trip && trip.car.car_no && (
-                <option value={trip.car.id}>{trip.car.car_no}</option>
-              )}
-              {cars &&
-                cars.map((car, index) => (
-                  <option key={car.id} value={car.id}>
-                    {car.car_no}
-                  </option>
-                ))} */}
                 {trip && (trip as { car: { id: string; car_no: string } }).car.car_no && (
                   <option value={(trip as { car: { id: string } }).car.id}>
                     {(trip as { car: { car_no: string } }).car.car_no}
@@ -193,25 +184,6 @@ export default function ViewTrip() {
               >
                 Driver
               </label>
-
-            {/* <select
-              id="country"
-              className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              required
-              value={selectedDriver}
-              onChange={(e) => setSelectedDriver(e.target.value)}
-            >
-              {trip && trip.driver.fullname && (
-                <option value={trip.driver.id}>{trip.driver.fullname}</option>
-              )}
-              {drivers &&
-                drivers.map((driver, index) => (
-                  <option key={driver.id} value={driver.id}>
-                    {driver.fullname}
-                  </option>
-                ))}
-            </select> */}
-
           <select
             id="country"
             className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -276,42 +248,7 @@ export default function ViewTrip() {
               </select>
             </div>
           </div>
-          {/* <div className="flex justify-between items-center space-x-4">
-            <div className="mb-6 w-full">
-              <label
-                htmlFor="country"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Departure Location
-              </label>
-              <select
-                id="country"
-                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              >
-                {departure.map((location) => (
-                  <option>{location}</option>
-                ))}
-              </select>
-            </div>
-            <div className="mb-6 w-full">
-              <label
-                htmlFor="country"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Arrival Location
-              </label>
-              <select
-                id="country"
-                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              >
-                {arrival.map((location) => (
-                  <option>{location}</option>
-                ))}
-              </select>
-            </div>
-          </div> */}
+          
           <div className="flex justify-between items-center space-x-4">
             <div className="mb-6 w-full">
               <label
@@ -322,7 +259,7 @@ export default function ViewTrip() {
               </label>
               <input
                 type="time"
-                id="address"
+                id="time"
                 // placeholder="Nyabugogo"
                 value={trip && trip.departure_time 
                   || ''

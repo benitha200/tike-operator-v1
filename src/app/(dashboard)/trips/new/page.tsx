@@ -22,8 +22,15 @@ export default function NewTrip() {
   const [arrivalLocation, setArrivalLocation] = useState("");
   const [arrivalTime, setArrivalTime] = useState("");
   const [price, setPrice] = useState("");
-  const [operator, setOperator] = useState("");
+  const [operatorId, setOperatorId] = useState("");
 
+  useEffect(() => {
+    const userdata = Cookies.get('currentUser');
+    if (userdata) {
+      const currentUser = JSON.parse(userdata);
+      setOperatorId(currentUser.operator?.id || "null");
+    }
+  }, []);
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     console.log(Cookies.get('token'))
@@ -39,7 +46,7 @@ export default function NewTrip() {
       arrival_location: arrivalLocation,
       arrival_time: new Date(`2024-03-19T${arrivalTime}`),
       price: price,
-      operator: "89699bac-479a-4025-b410-11db53068ce1",
+      operator: operatorId,
       idempotency_key:idempotencyKey,
       car:selectedCar,
     };
@@ -310,9 +317,7 @@ export default function NewTrip() {
               <select
                 id="country"
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                // required
-                // value={}
-                // onChange={(e)=>setSelectedCar(e.target.value)}
+     
               >
                 <option>One Time</option>
                 <option>Once a week</option>

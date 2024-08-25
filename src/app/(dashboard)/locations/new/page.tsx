@@ -62,7 +62,8 @@ import { FiCheck } from "react-icons/fi";
 import { useState } from "react";
 import Cookies from "js-cookie";
 import { v4 as uuidv4 } from 'uuid';
-import { Toast} from "flowbite-react";
+import { ToastContainer,toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
 
 export default function NewLocation() {
   const [formData, setFormData] = useState({
@@ -99,13 +100,16 @@ export default function NewLocation() {
       const response = await fetch("https://api.tike.rw/locations/", requestOptions);
       const result = await response.json();
       console.log(result);
+      toast.success("Location created successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to create location. Please try again later.");
     }
   };
 
   return (
     <>
+    <ToastContainer/>
       <form onSubmit={handleSubmit} method="post">
         <div className="flex justify-between items-center p-5 bg-white border-b border-gray-200">
           <h2 className="text-xl font-semibold">Create New Location</h2>

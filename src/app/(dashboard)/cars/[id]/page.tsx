@@ -3,6 +3,8 @@ import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { Car } from "../../alltrips/interfaces";
+import 'react-toastify/dist/ReactToastify.css';
+import { ToastContainer, toast } from 'react-toastify';
 
 export default function ViewCar() {
 
@@ -25,8 +27,12 @@ export default function ViewCar() {
       .then((response) => response.json())
       .then((result) =>{
         setCar(result.payload);
+        toast.success("Car updated successfully!");
       })
-      .catch((error) => console.error(error));  
+      .catch((error) => {
+        toast.error("Failed to add car!");
+        console.error(error);
+      });  
   },[]);
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -64,8 +70,14 @@ export default function ViewCar() {
   
     fetch(`https://api.tike.rw/cars/${car.id}/`, requestOptions)
       .then((response) => response.json())
-      .then((result) => console.log(result))
-      .catch((error) => console.error(error));
+      .then((result) =>{ 
+        console.log(result);
+        toast.success("Car updated successfully!");
+      })
+      .catch((error) => {
+        toast.error("Failed to update car!");
+        console.error(error);
+      });
   };
 
   return (
@@ -227,6 +239,7 @@ export default function ViewCar() {
             </div>
           </div>
           <div>
+            <ToastContainer/>
             {/* <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
               Ammenities (Tick if it applies)
             </span> */}

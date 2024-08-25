@@ -72,10 +72,10 @@ export default function Travelers() {
                 {/* Table Header */}
                 <thead className="bg-gray-100">
                   <tr>
-                    <th scope="col" className="p-4">No.</th>
-                    <th scope="col" className="p-4">Fullname</th>
-                    <th scope="col" className="p-4">Contacts</th>
-                    <th scope="col" className="p-4"></th>
+                    <th scope="col" className="p-4 text-left">No.</th>
+                    <th scope="col" className="p-4 text-left">Fullname</th>
+                    <th scope="col" className="p-4 text-left">Contacts</th>
+                    <th scope="col" className="p-4 text-left">Actions</th>
                   </tr>
                 </thead>
                 {/* Table Body */}

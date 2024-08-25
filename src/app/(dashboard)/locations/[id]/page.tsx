@@ -3,6 +3,9 @@ import { FiCheck } from "react-icons/fi";
 import { useState, useEffect } from "react";
 import Cookies from "js-cookie";
 import { Location } from "../../trips/interfaces";
+import { ToastContainer,toast } from "react-toastify";
+import 'react-toastify/dist/ReactToastify.css';
+
 
 
 export default function EditLocation() {
@@ -68,13 +71,16 @@ export default function EditLocation() {
       );
       const result = await response.json();
       console.log(result);
+      toast.success("Location updated successfully!");
     } catch (error) {
       console.error(error);
+      toast.error("Failed to update location. Please try again later.");
     }
   };
 
   return (
     <>
+    <ToastContainer />
       {location && (
         <form onSubmit={handleSubmit} method="post">
           <div className="flex justify-between items-center p-5 bg-white border-b border-gray-200">
