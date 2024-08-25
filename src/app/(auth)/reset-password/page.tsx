@@ -37,11 +37,13 @@ export default function ResetPassword({ query }: any) {
   const searchParams = useSearchParams();
 
   useEffect(() => {
-    let arrIdentifier = searchParams.get("identifier")?.split(" ");
-    let newIdentifier = arrIdentifier?.join("+");
-    setIdentifier(newIdentifier);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
+    if (searchParams) {
+      let arrIdentifier = searchParams.get("identifier")?.split(" ") || [];
+      let newIdentifier = arrIdentifier.join("+");
+      setIdentifier(newIdentifier);
+    }
   }, []);
+  
 
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
