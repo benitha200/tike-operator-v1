@@ -43,7 +43,7 @@ export default function NewCar({}) {
 
     useEffect(()=>{
       const data:any = Cookies.get('currentUser')
-      setCurrentUser(JSON.parse(data));
+      // setCurrentUser(JSON.parse(data));
     },[])
 
 
