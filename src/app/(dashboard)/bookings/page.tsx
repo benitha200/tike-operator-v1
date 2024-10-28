@@ -394,7 +394,7 @@ function Cars() {
                           booking?.payment_status ? "text-gray-900" : "text-red-600"
                         }`}
                       >
-                        {booking?.payment_status ? "Paid" : "Pending"}
+                        {booking?.payment_status}
                       </td>
 
                       <td className="p-4 whitespace-nowrap space-x-2">
