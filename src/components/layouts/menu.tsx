@@ -5,6 +5,7 @@ import { BiTrip } from "react-icons/bi";
 import { GrLocation } from "react-icons/gr";
 import {
   BsCardChecklist,
+  BsCashStack,
   BsFilePerson,
   BsPeopleFill,
   BsShieldCheck,
@@ -128,8 +129,8 @@ function Menu(props: Props) {
                         href="/payments"
                         className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75"
                       >
-                        <BsCardChecklist />
-                        <span className="ml-3">Bookings</span>
+                        <BsCashStack />
+                        <span className="ml-3">Payments</span>
                       </Link>
                     </li>
                   </ul>
