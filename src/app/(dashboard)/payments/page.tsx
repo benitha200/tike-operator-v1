@@ -52,7 +52,7 @@ const Payments = () => {
     const [searchTerm, setSearchTerm] = useState("");
     const [paymentStatus, setPaymentStatus] = useState<"all" | "paid" | "unpaid">("all");
     const [currentPage, setCurrentPage] = useState(1);
-    const [paymentsPerPage] = useState(20);
+    const [paymentsPerPage] = useState(10);
     const [totalPayments, setTotalPayments] = useState(0);
     const [totalPaid, setTotalPaid] = useState(0);
     const [totalUnpaid, setTotalUnpaid] = useState(0);
@@ -229,6 +229,9 @@ const Payments = () => {
                                 <tr>
                                     <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
                                         Transaction ID
+                                    </th>
+                                    <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+                                        Booking ID
                                     </th>
                                     <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
                                         Phone Number

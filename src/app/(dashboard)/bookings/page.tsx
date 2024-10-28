@@ -319,7 +319,7 @@ const Bookings = () => {
     "all"
   );
   const [currentPage, setCurrentPage] = useState(1);
-  const [bookingsPerPage] = useState(20);
+  const [bookingsPerPage] = useState(10);
 
   useEffect(() => {
     const myHeaders = new Headers();
