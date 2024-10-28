@@ -288,7 +288,7 @@ function Cars() {
   return (
     <>
       <div className="flex justify-between items-center p-5 bg-white border-b border-gray-200">
-        <h2 className="text-xl font-semibold">All Bookings</h2>
+        <h2 className="text-xl font-semibold">All Bookings!</h2>
         <form>
           <div className="sm:w-64 xl:w-96">
           <input
