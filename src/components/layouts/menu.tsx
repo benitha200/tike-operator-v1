@@ -129,7 +129,7 @@ function Menu(props: Props) {
                         href="/payments"
                         className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75"
                       >
-                        <BsCashStack />
+                        <BsCashStack/>
                         <span className="ml-3">Payments</span>
                       </Link>
                     </li>
