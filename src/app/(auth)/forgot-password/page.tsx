@@ -63,7 +63,7 @@ export default function ForgotPassword() {
       <div className="mx-auto md:h-screen flex flex-col justify-center items-center px-6 pt-8 pt:mt-0">
         <div className="flex justify-center items-center mb-8 lg:mb-10">
           <Image
-            src="/img/logo.svg"
+            src="/logo.svg"
             className="h-10 mr-4"
             width={100}
             height={100}
