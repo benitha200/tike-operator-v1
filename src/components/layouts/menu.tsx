@@ -123,6 +123,15 @@ function Menu(props: Props) {
                         <span className="ml-3">Bookings</span>
                       </Link>
                     </li>
+                    <li>
+                      <Link
+                        href="/payments"
+                        className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75"
+                      >
+                        <BsCardChecklist />
+                        <span className="ml-3">Bookings</span>
+                      </Link>
+                    </li>
                   </ul>
 
                   <div className="space-y-2 pt-2">
