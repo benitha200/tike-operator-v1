@@ -282,7 +282,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 
 interface Booking {
   id: string;
-  payment_status: boolean;
+  payment_status: string;
   departure_location: {
     id: string;
     name: string;
@@ -315,7 +315,7 @@ const Bookings = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [filteredBookings, setFilteredBookings] = useState<Booking[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
-  const [paymentStatus, setPaymentStatus] = useState<"all" | "paid" | "unpaid">(
+  const [paymentStatus, setPaymentStatus] = useState<"all" | "PAID" | "unpaid">(
     "all"
   );
   const [currentPage, setCurrentPage] = useState(1);
@@ -351,7 +351,7 @@ const Bookings = () => {
 
     if (paymentStatus !== "all") {
       filteredBookings.filter(
-        (booking) => booking.payment_status === (paymentStatus === "paid")
+        (booking) => booking.payment_status === "Paid"
       );
     }
 
@@ -373,7 +373,7 @@ const Bookings = () => {
     setSearchTerm(e.target.value);
   };
 
-  const handlePaymentStatusChange = (status: "all" | "paid" | "unpaid") => {
+  const handlePaymentStatusChange = (status: "all" | "PAID" | "unpaid") => {
     setPaymentStatus(status);
   };
 
@@ -398,8 +398,8 @@ const Bookings = () => {
             <label htmlFor="payment-status-all">All</label>
             <Checkbox
               id="payment-status-paid"
-              checked={paymentStatus === "paid"}
-              onChange={() => handlePaymentStatusChange("paid")}
+              checked={paymentStatus === "PAID"}
+              onChange={() => handlePaymentStatusChange("PAID")}
             />
             <label htmlFor="payment-status-paid">Paid</label>
             <Checkbox
@@ -415,6 +415,9 @@ const Bookings = () => {
         <table className="table-auto w-full divide-y divide-gray-200">
           <thead className="bg-gray-100">
             <tr>
+              <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+                Booking Id
+              </th>
               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
                 Traveler Name
               </th>
@@ -436,6 +439,9 @@ const Bookings = () => {
           <tbody className="bg-white divide-y divide-gray-200">
             {currentBookings.map((booking) => (
               <tr key={booking.id} className="hover:bg-gray-100">
+                <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                  {booking.id}
+                </td>
                 <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
                   <div className="text-base font-semibold text-gray-900">
                     {booking.traveler.fullname}
@@ -461,7 +467,7 @@ const Bookings = () => {
                       : "text-red-600"
                   }`}
                 >
-                  {booking.payment_status ? "Paid" : "Unpaid"}
+                  {booking.payment_status === "Paid" ? "Paid" : "Unpaid"}
                 </td>
                 <td className="p-4 whitespace-nowrap space-x-2">
                   {booking.payment_status ? (
