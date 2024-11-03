@@ -273,6 +273,8 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
+import Link from "next/link";
+import { FiEye } from "react-icons/fi";
 
 interface Booking {
   id: string;
@@ -344,7 +346,7 @@ const Bookings = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [paymentStatus, setPaymentStatus] = useState<"all" | "PAID" | "unpaid">("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [bookingsPerPage] = useState(10);
+  const [bookingsPerPage] = useState(7);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
@@ -504,21 +506,21 @@ const Bookings = () => {
                   </td>
                   <td className="p-4 whitespace-nowrap space-x-2">
                     {booking.payment_status ? (
-                      <Button
-                        onClick={() => {
-                          // Handle view action for paid bookings
-                        }}
-                      >
-                        View
-                      </Button>
+                      <Link
+                      href={`/`}
+                      className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
+                    >
+                      <FiEye className="mr-2" />
+                      View
+                    </Link>
                     ) : (
-                      <Button
-                        onClick={() => {
-                          // Handle cancel action for unpaid bookings
-                        }}
-                      >
-                        Cancel
-                      </Button>
+                      <Link
+                      href={`/`}
+                      className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
+                    >
+                      <FiEye className="mr-2" />
+                      View
+                    </Link>
                     )}
                   </td>
                 </tr>
