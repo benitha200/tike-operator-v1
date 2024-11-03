@@ -346,7 +346,7 @@ const Bookings = () => {
   const [searchTerm, setSearchTerm] = useState("");
   const [paymentStatus, setPaymentStatus] = useState<"all" | "PAID" | "unpaid">("all");
   const [currentPage, setCurrentPage] = useState(1);
-  const [bookingsPerPage] = useState(7);
+  const [bookingsPerPage] = useState(5);
   const [isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
