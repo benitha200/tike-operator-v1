@@ -505,7 +505,7 @@ const Bookings = () => {
                     {booking.payment_status === "PAID" ? "Paid" : "Unpaid"}
                   </td>
                   <td className="p-4 whitespace-nowrap space-x-2">
-                    {booking.payment_status ? (
+                    {booking.payment_status==="PAID" ? (
                       <Link
                       href={`/`}
                       className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
