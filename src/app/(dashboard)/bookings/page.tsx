@@ -199,7 +199,7 @@ const Bookings = () => {
                       : "text-red-600"
                   }`}
                 >
-                  {booking.payment_status === "PAID"||"paid" ? "Paid" : "Unpaid"}
+                  {booking.payment_status === "PAID" ? "Paid" : "Unpaid"}
                 </td>
                 <td className="p-4 whitespace-nowrap space-x-2">
                   {booking.payment_status ? (
