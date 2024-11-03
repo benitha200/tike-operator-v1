@@ -519,7 +519,7 @@ const Bookings = () => {
                       className="text-white bg-red-600 hover:bg-red-700 focus:ring-4 focus:ring-red-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
                     >
                       <FiEye className="mr-2" />
-                      View
+                      Cancel
                     </Link>
                     )}
                   </td>
