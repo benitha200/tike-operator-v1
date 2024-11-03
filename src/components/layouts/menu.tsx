@@ -390,7 +390,7 @@ function Menu(props: Props) {
 
                   <div className="space-y-2 pt-2">
                     <Link
-                      href="/login"
+                      href="operator/login"
                       className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75"
                       onClick={handleLogout}
                     >
