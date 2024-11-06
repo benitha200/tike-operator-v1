@@ -150,13 +150,13 @@ export default function Locations() {
                           </div>
                         </td>
                         <td className="p-4 whitespace-nowrap space-x-2">
-                          <Link
+                          {/* <Link
                             href={`/locations/${location.id}`}
                             className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
                           >
                             <FiEdit className="mr-2" />
                             Edit
-                          </Link>
+                          </Link> */}
                           <button
                             type="button"
                             onClick={() => handleDeleteClick(location.id)}
