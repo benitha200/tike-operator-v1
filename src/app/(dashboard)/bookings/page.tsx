@@ -197,6 +197,7 @@
 // export default Cars;
 
 "use client"
+import { API_URL } from "@/constants/Constants";
 import Cookies from "js-cookie";
 import { useEffect, useState } from "react";
 
@@ -252,7 +253,7 @@ function Cars() {
       headers: myHeaders,
     };
 
-    fetch("https://api.tike.rw/bookings/", requestOptions)
+    fetch(`${API_URL}/bookings/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setBookings(result.payload);

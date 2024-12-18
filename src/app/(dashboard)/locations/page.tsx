@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { FiEdit, FiPlus, FiTrash } from "react-icons/fi";
 import { Location } from "../trips/interfaces";
+import { API_URL } from "@/constants/Constants";
 
 export default function Locations() {
   const [data, setData] = useState<Location[]>([]);
@@ -36,7 +37,7 @@ export default function Locations() {
       headers: myHeaders,
     };
 
-    fetch("https://api.tike.rw/locations/", requestOptions)
+    fetch(`${API_URL}/locations/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setData(result.payload);
@@ -246,7 +247,7 @@ export default function Locations() {
 //         // redirect: "follow"
 //       };
 
-//       fetch("https://api.tike.rw/locations/", requestOptions)
+//       fetch("http://localhost:3010/locations/", requestOptions)
 //         .then((response) => response.json())
 //         .then((result) => {
 //           console.log(result)

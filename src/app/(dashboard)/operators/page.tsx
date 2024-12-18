@@ -117,6 +117,7 @@ import Link from "next/link";
 import { FiEdit, FiPlus, FiTrash } from "react-icons/fi";
 import Cookies from "js-cookie";
 import { Operator } from "../alltrips/interfaces";
+import { API_URL } from "@/constants/Constants";
 
 export default function Operators() {
   const [operators, setOperators] = useState<Operator[]>([]);
@@ -136,7 +137,7 @@ export default function Operators() {
           headers: myHeaders,
         };
 
-        const response = await fetch("https://api.tike.rw/operators/", requestOptions);
+        const response = await fetch(`${API_URL}/operators/`, requestOptions);
 
         if (!response.ok) {
           throw new Error(`Failed to fetch operators: ${response.statusText}`);

@@ -6,6 +6,7 @@ import { FiEdit, FiPlus, FiTrash } from "react-icons/fi";
 import { ToastContainer, toast } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
 import { Trip } from "../alltrips/interfaces";
+import { API_URL } from "@/constants/Constants";
 
 export default function Trips() {
   const [trips, setTrips] = useState<Trip[]>([]);
@@ -24,7 +25,7 @@ export default function Trips() {
       headers: myHeaders,
     };
 
-    fetch("https://api.tike.rw/trips/", requestOptions)
+    fetch(`${API_URL}/trips/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setTrips(result.payload);
@@ -48,7 +49,7 @@ export default function Trips() {
       headers: myHeaders,
     };
 
-    fetch(`https://api.tike.rw/trips/${tripId}`, requestOptions)
+    fetch(`${API_URL}/trips/${tripId}`, requestOptions)
       .then((response) => {
         if (response.ok) {
           setTrips(trips.filter(trip => trip.id !== tripId));

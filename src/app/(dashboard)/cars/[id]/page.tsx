@@ -5,6 +5,7 @@ import { FiCheck } from "react-icons/fi";
 import { Car } from "../../alltrips/interfaces";
 import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
+import { API_URL } from "@/constants/Constants";
 
 export default function ViewCar() {
 
@@ -23,7 +24,7 @@ export default function ViewCar() {
       headers: myHeaders,
     };
 
-    fetch(`https://api.tike.rw/cars/${carId}/`, requestOptions)
+    fetch(`${API_URL}/cars/${carId}/`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{
         setCar(result.payload);
@@ -68,7 +69,7 @@ export default function ViewCar() {
       body: JSON.stringify(car)
     };
   
-    fetch(`https://api.tike.rw/cars/${car.id}/`, requestOptions)
+    fetch(`${API_URL}/cars/${car.id}/`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         console.log(result);

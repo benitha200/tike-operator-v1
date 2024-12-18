@@ -78,7 +78,7 @@
 //       };
 
 //       const response = await fetch(
-//         "https://api.tike.rw/operators/",
+//         "http://localhost:3010/operators/",
 //         requestOptions
 //       );
 
@@ -280,6 +280,7 @@ import {
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
 import { CustomToast } from "@/components/layouts/CustomToast"; // Adjust the import path as needed
+import { API_URL } from "@/constants/Constants";
 
 const formSchema = z.object({
   name: z.string().min(2, { message: "Name must be at least 2 characters." }),
@@ -321,7 +322,7 @@ async function submitToOperators(values: z.infer<typeof formSchema>) {
     body: JSON.stringify(requestBody),
   };
 
-  const response = await fetch("https://api.tike.rw/operators/", requestOptions);
+  const response = await fetch(`${API_URL}/operators/`, requestOptions);
 
   if (!response.ok) {
     throw new Error(`Failed to submit to operators API: ${response.statusText}`);
@@ -355,7 +356,7 @@ async function submitToRegister(values: z.infer<typeof formSchema>, retries = 0)
   };
 
   try {
-    const response = await fetch("https://api.tike.rw/register/", requestOptions);
+    const response = await fetch(`${API_URL}/register/`, requestOptions);
     if (!response.ok) {
       const result = await response.json();
       if (

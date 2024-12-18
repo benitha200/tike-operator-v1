@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { FiEdit, FiPlus, FiTrash } from 'react-icons/fi';
 import Cookies from 'js-cookie';
+import { API_URL } from '@/constants/Constants';
 
 type DriversData = {
   id: string;
@@ -50,7 +51,7 @@ export default function Drivers() {
         headers: myHeaders,
       };
 
-      const response = await fetch('https://api.tike.rw/drivers/', requestOptions);
+      const response = await fetch(`${API_URL}/drivers/`, requestOptions);
 
       if (!response.ok) {
         throw new Error(`Failed to fetch drivers: ${response.statusText}`);

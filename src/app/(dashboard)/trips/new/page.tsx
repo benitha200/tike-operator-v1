@@ -7,6 +7,7 @@ import 'react-toastify/dist/ReactToastify.css';
 import { ToastContainer, toast } from 'react-toastify';
 import { Car, Driver } from "../interfaces";
 import { Location } from "../../alltrips/interfaces";
+import { API_URL } from "@/constants/Constants";
 
 export default function NewTrip() {
 
@@ -53,7 +54,7 @@ export default function NewTrip() {
     
 
     try {
-      const response = await fetch("https://api.tike.rw/trips/", {
+      const response = await fetch(`${API_URL}/trips/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -83,7 +84,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch("https://api.tike.rw/cars/", requestOptions)
+    fetch(`${API_URL}/cars/`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         console.log(result)
@@ -102,7 +103,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch("https://api.tike.rw/drivers/", requestOptions)
+    fetch(`${API_URL}/drivers/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
@@ -122,7 +123,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch("https://api.tike.rw/locations/", requestOptions)
+    fetch(`${API_URL}/locations/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)

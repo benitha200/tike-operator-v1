@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
 import Link from "next/link";
+import { API_URL } from "@/constants/Constants";
 
 interface Traveler {
   id: string;
@@ -41,7 +42,7 @@ export default function EditLocation() {
       headers: myHeaders,
     };
 
-    fetch(`https://api.tike.rw/travelers/${travelerId}`, requestOptions)
+    fetch(`${API_URL}/travelers/${travelerId}`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result.payload);
@@ -79,7 +80,7 @@ export default function EditLocation() {
 
     try {
       const response = await fetch(
-        `https://api.tike.rw/travelers/${(traveler || defaultTraveler).id}`,
+        `${API_URL}/travelers/${(traveler || defaultTraveler).id}`,
         requestOptions
       );
       const result = await response.json();

@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { ChangeEvent,FormEvent } from "react";
 import { Driver, Operator } from "../../alltrips/interfaces";
+import { API_URL } from "@/constants/Constants";
 
 export default function ViewDriver() {
   const [data, setData] = useState<Operator>();
@@ -31,7 +32,7 @@ export default function ViewDriver() {
         headers: myHeaders,
       };
 
-      fetch(`https://api.tike.rw/drivers/${driverId}`, requestOptions)
+      fetch(`${API_URL}/drivers/${driverId}`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
           setData(result.payload);
@@ -69,7 +70,7 @@ export default function ViewDriver() {
       body: JSON.stringify(formData),
     };
 
-    fetch(`https://api.tike.rw/drivers/${data.id}`, requestOptions)
+    fetch(`${API_URL}/drivers/${data.id}`, requestOptions)
       .then((response) => response.json())
       .then((result) => console.log(result))
       .catch((error) => console.error(error));

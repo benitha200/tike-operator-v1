@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { FiCheck } from "react-icons/fi";
 import { v4 as uuidv4 } from 'uuid';
 import { Car, Driver, Location } from "../interfaces";
+import { API_URL } from "@/constants/Constants";
 
 export default function NewTrip() {
 
@@ -43,7 +44,7 @@ export default function NewTrip() {
     
 
     try {
-      const response = await fetch("https://api.tike.rw/trips/", {
+      const response = await fetch(`${API_URL}/trips/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -95,7 +96,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch("https://api.tike.rw/cars/", requestOptions)
+    fetch(`${API_URL}/cars/`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         console.log(result)
@@ -114,7 +115,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch("https://api.tike.rw/drivers/", requestOptions)
+    fetch(`${API_URL}/drivers/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
@@ -134,7 +135,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch("https://api.tike.rw/locations/", requestOptions)
+    fetch(`${API_URL}/locations/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)

@@ -17,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { API_URL } from '@/constants/Constants';
 
 export default function NewCar() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -62,6 +63,7 @@ export default function NewCar() {
       "model": model,
       "type": type,
       "operator": operatorId,
+      "number_of_seats":pseats
     });
   
     const requestOptions = {
@@ -71,7 +73,7 @@ export default function NewCar() {
     };
   
     try {
-      const response = await fetch("https://api.tike.rw/cars/", requestOptions);
+      const response = await fetch(`${API_URL}/cars/`, requestOptions);
       if (!response.ok) {
         throw new Error('Network response was not ok');
       }

@@ -1,4 +1,5 @@
 "use client"
+import { API_URL } from "@/constants/Constants";
 import { useState,FormEvent } from "react";
 import { FiCheck } from "react-icons/fi";
 import { v4 as uuidv4 } from 'uuid';
@@ -31,7 +32,7 @@ export default function NewTraveler() {
         // redirect: "follow"
       };
 
-      fetch("https://api.tike.rw/register/", requestOptions)
+      fetch(`${API_URL}/register/`, requestOptions)
         .then((response) => response.json())
         .then((result) => console.log(result))
         .catch((error) => console.error(error)); 

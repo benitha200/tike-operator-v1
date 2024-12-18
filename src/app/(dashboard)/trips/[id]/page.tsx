@@ -5,6 +5,7 @@ import { FiCheck } from "react-icons/fi";
 import { Trip } from "../interfaces";
 import { Driver } from "../interfaces";
 import { Location } from "../interfaces";
+import { API_URL } from "@/constants/Constants";
 
 export default function ViewTrip() {
 
@@ -30,7 +31,7 @@ export default function ViewTrip() {
       // redirect: "follow"
     };
 
-    fetch("https://api.tike.rw/locations/", requestOptions)
+    fetch(`${API_URL}/locations/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
@@ -49,7 +50,7 @@ export default function ViewTrip() {
       headers: myHeaders
     };
 
-    fetch("https://api.tike.rw/cars/", requestOptions)
+    fetch(`${API_URL}/cars/`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         console.log(result)
@@ -73,7 +74,7 @@ export default function ViewTrip() {
       headers: myHeaders
     };
     
-    fetch(`https://api.tike.rw/trips/${tripId}`, requestOptions)
+    fetch(`${API_URL}/trips/${tripId}`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         setTrip(result.payload);
@@ -91,7 +92,7 @@ export default function ViewTrip() {
       // redirect: "follow"
     };
 
-    fetch("https://api.tike.rw/drivers/", requestOptions)
+    fetch(`${API_URL}/drivers/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)

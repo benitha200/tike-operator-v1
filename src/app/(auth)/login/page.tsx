@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { API_URL } from "@/constants/Constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -47,7 +48,7 @@ export default function Login() {
     setLoading(true);
     setError(null);
     await axios
-      .post("https://api.tike.rw/login/", {
+      .post(`${API_URL}/login/`, {
         identifier: values.identifier,
         password: values.password,
       })

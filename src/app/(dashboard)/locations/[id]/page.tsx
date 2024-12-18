@@ -5,6 +5,7 @@ import Cookies from "js-cookie";
 import { Location } from "../../trips/interfaces";
 import { ToastContainer,toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { API_URL } from "@/constants/Constants";
 
 
 
@@ -32,7 +33,7 @@ export default function EditLocation() {
     };
 
     fetch(
-      `https://api.tike.rw/locations/${locationId}`,
+      `${API_URL}/locations/${locationId}`,
       requestOptions
     )
       .then((response) => response.json())
@@ -66,7 +67,7 @@ export default function EditLocation() {
 
     try {
       const response = await fetch(
-        `https://api.tike.rw/locations/${(location || defaultLocation).id}`,
+        `${API_URL}/locations/${(location || defaultLocation).id}`,
         requestOptions
       );
       const result = await response.json();
