@@ -1,6 +1,7 @@
 "use client"
-import { FiArrowLeftCircle, FiCheck } from "react-icons/fi";
-import { useState, useEffect } from "react";
+
+import React, { useState, useEffect, ChangeEvent, FormEvent } from "react";
+import { FiArrowLeftCircle } from "react-icons/fi";
 import Cookies from "js-cookie";
 import { ToastContainer, toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
@@ -12,14 +13,49 @@ interface Traveler {
   fullname: string;
   nationality: string;
   dob: string;
+  gender: 'male' | 'female';
+  phone_number: string;
+  email: string;
+}
+
+interface FormData {
+  fullname: string;
+  nationality: string;
+  dob: string;
   gender: string;
   phone_number: string;
   email: string;
 }
 
-export default function EditLocation() {
+interface ApiResponse {
+  payload: Traveler;
+}
+
+const NATIONALITIES = [
+  ["RW", "Rwanda"],
+  ["UG", "Uganda"],
+  ["BI", "Burundi"],
+  ["TZ", "Tanzania"],
+  ["KE", "Kenya"],
+  ["CD", "Congo"],
+] as const;
+
+const LoadingSkeleton: React.FC = () => (
+  <div className="animate-pulse grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
+    {[...Array(6)].map((_, i) => (
+      <div key={i} className="mb-6">
+        <div className="h-4 w-24 bg-gray-200 rounded mb-2"></div>
+        <div className="h-10 bg-gray-200 rounded"></div>
+      </div>
+    ))}
+  </div>
+);
+
+const EditTraveler: React.FC = () => {
+  const [isLoading, setIsLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string>("");
   const [traveler, setTraveler] = useState<Traveler | null>(null);
-  const [formData, setFormData] = useState({
+  const [formData, setFormData] = useState<FormData>({
     fullname: "",
     nationality: "",
     dob: "",
@@ -28,207 +64,189 @@ export default function EditLocation() {
     email: "",
   });
 
-  const currentUrl = window.location.href;
-  const urlParts = currentUrl.split('/');
-  const travelerId = urlParts[urlParts.length - 1];
-  const defaultTraveler = { id: 'default' };
-
   useEffect(() => {
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
+    const fetchTravelerData = async () => {
+      setIsLoading(true);
+      setError("");
 
-    const requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-    };
+      try {
+        const travelerId = window.location.pathname.split('/').pop();
+        if (!travelerId) throw new Error('Traveler ID not found');
 
-    fetch(`${API_URL}/travelers/${travelerId}`, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result.payload);
+        const response = await fetch(`${API_URL}/travelers/${travelerId}`, {
+          headers: {
+            Authorization: `Bearer ${Cookies.get('token')}`,
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to fetch traveler data');
+        }
+
+        const result = await response.json() as ApiResponse;
         setTraveler(result.payload);
         setFormData({
-          fullname: result.payload.fullname,
-          nationality: result.payload.nationality,
-          dob: result.payload.dob,
-          gender: result.payload.gender,
-          phone_number: result.payload.phone_number,
-          email: result.payload.email,
+          fullname: result.payload.fullname || "",
+          nationality: result.payload.nationality || "",
+          dob: result.payload.dob || "",
+          gender: result.payload.gender || "",
+          phone_number: result.payload.phone_number || "",
+          email: result.payload.email || "",
         });
-      })
-      .catch((error) => console.error(error));
-  }, [travelerId]);
-
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setFormData({ ...formData, [e.target.name]: e.target.value });
-  };
-
-  const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
-    e.preventDefault();
-
-    const myHeaders = new Headers();
-    myHeaders.append("Content-Type", "application/json");
-    myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
-
-    const raw = JSON.stringify(formData);
-
-    const requestOptions = {
-      method: "PATCH",
-      headers: myHeaders,
-      body: raw,
+      } catch (err) {
+        const error = err as Error;
+        setError(error.message);
+        toast.error("Failed to load traveler data");
+      } finally {
+        setIsLoading(false);
+      }
     };
 
+    fetchTravelerData();
+  }, []);
+
+  const handleChange = (e: ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({
+      ...prev,
+      [name]: value,
+    }));
+  };
+
+  const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    if (!traveler?.id) {
+      toast.error("Traveler ID not found");
+      return;
+    }
+
     try {
-      const response = await fetch(
-        `${API_URL}/travelers/${(traveler || defaultTraveler).id}`,
-        requestOptions
-      );
-      const result = await response.json();
-      console.log(result);
-      toast.success("Location updated successfully!");
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to update location. Please try again later.");
+      const response = await fetch(`${API_URL}/travelers/${traveler.id}`, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+          Authorization: `Bearer ${Cookies.get('token')}`,
+        },
+        body: JSON.stringify(formData),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update traveler');
+      }
+
+      await response.json();
+      toast.success("Traveler data updated successfully!");
+    } catch (err) {
+      toast.error("Failed to update traveler. Please try again.");
     }
   };
 
   return (
-    <>
+    <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
       <ToastContainer />
-      <Link
+
+      <div className="mb-6">
+        <Link
           href="/travelers"
           className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2 text-center"
         >
           <FiArrowLeftCircle className="-ml-1 mr-2 h-6 w-6" />
           All Travelers
         </Link>
-      {traveler && (
-        <form onSubmit={handleSubmit} method="post">
-          {/* <div className="flex justify-between items-center p-5 bg-white border-b border-gray-200">
-            <h2 className="text-xl font-semibold">Traveler Info: {traveler.fullname}</h2>
-            <button
-              type="submit"
-              className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2 text-center"
-            >
-              <FiCheck className="-ml-1 mr-2 h-6 w-6" />
-              Save Changes
-            </button>
-          </div> */}
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
-            <div className="mb-6">
-              <label
-                htmlFor="fullname"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Full Name
-              </label>
-              <input
-                type="text"
-                id="fullname"
-                name="fullname"
-                value={formData.fullname}
-                onChange={handleChange}
-                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              />
-            </div>
-            <div className="mb-6">
-              <label
-                htmlFor="nationality"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Nationality
-              </label>
-              <select
-                id="nationality"
-                name="nationality"
-                value={formData.nationality}
-                onChange={handleChange}
-                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              >
-                <option value="RW">Rwanda</option>
-                <option value="UG">Uganda</option>
-                <option value="BI">Burundi</option>
-                <option value="TZ">Tanzania</option>
-                <option value="KE">Kenya</option>
-                <option value="CD">Congo</option>
-              </select>
-            </div>
-            <div className="mb-6">
-              <label
-                htmlFor="dob"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Date of Birth
-              </label>
-              <input
-                type="date"
-                id="dob"
-                name="dob"
-                value={formData.dob}
-                onChange={handleChange}
-                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              />
-            </div>
-            <div className="mb-6">
-              <label
-                htmlFor="gender"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Gender
-              </label>
-              <select
-                id="gender"
-                name="gender"
-                value={formData.gender}
-                onChange={handleChange}
-                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              >
-                <option value="male">Male</option>
-                <option value="female">Female</option>
-              </select>
-            </div>
-            <div className="mb-6">
-              <label
-                htmlFor="phone_number"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Phone Number
-              </label>
-              <input
-                type="text"
-                id="phone_number"
-                name="phone_number"
-                value={formData.phone_number}
-                onChange={handleChange}
-                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              />
-            </div>
-            <div className="mb-6">
-              <label
-                htmlFor="email"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                Email
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              />
-            </div>
-          </div>
-        </form>
-      )}
-    </>
+      </div>
 
+      {error && (
+        <div className="bg-red-50 border-l-4 border-red-500 p-4 mb-6">
+          <p className="text-red-700">{error}</p>
+        </div>
+      )}
+
+      {isLoading ? (
+        <LoadingSkeleton />
+      ) : (
+        <form onSubmit={handleSubmit} className="bg-white shadow-sm rounded-lg">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-6">
+        <div className="mb-6">
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Full Name
+          </label>
+          <input
+            type="text"
+            name="fullname"
+            value={formData.fullname}
+            className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            readOnly
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Nationality
+          </label>
+          <input
+            type="text"
+            value={NATIONALITIES.find(([value]) => value === formData.nationality)?.[1] || formData.nationality}
+            className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            readOnly
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Date of Birth
+          </label>
+          <input
+            type="date"
+            name="dob"
+            value={formData.dob}
+            className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            readOnly
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Gender
+          </label>
+          <input
+            type="text"
+            value={formData.gender === 'male' ? 'Male' : 'Female'}
+            className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            readOnly
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Phone Number
+          </label>
+          <input
+            type="tel"
+            name="phone_number"
+            value={formData.phone_number}
+            className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            readOnly
+          />
+        </div>
+
+        <div className="mb-6">
+          <label className="block mb-2 text-sm font-medium text-gray-900">
+            Email
+          </label>
+          <input
+            type="email"
+            name="email"
+            value={formData.email}
+            className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500"
+            readOnly
+          />
+        </div>
+      </div>
+    </form>
+      )}
+    </div>
   );
-}
+};
+
+export default EditTraveler;

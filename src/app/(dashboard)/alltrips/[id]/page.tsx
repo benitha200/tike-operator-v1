@@ -256,9 +256,7 @@ export default function ViewTrip() {
               onChange={(e) => setRecurringTime(e.target.value)}
               required
             >
-              <option>One Time</option>
-              <option>Once a week</option>
-              <option>Twice a week</option>
+              <option>Daily</option>
             </select>
           </div>
         </div>

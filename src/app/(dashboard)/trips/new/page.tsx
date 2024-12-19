@@ -1,6 +1,6 @@
 "use client"
 import Cookies from "js-cookie";
-import { useEffect, useState,FormEvent } from "react";
+import { useEffect, useState, FormEvent } from "react";
 import { FiCheck } from "react-icons/fi";
 import { v4 as uuidv4 } from 'uuid';
 import 'react-toastify/dist/ReactToastify.css';
@@ -10,18 +10,18 @@ import { Location } from "../../alltrips/interfaces";
 import { API_URL } from "@/constants/Constants";
 
 export default function NewTrip() {
-
-  const [cars,setCars]=useState<Car[]>([]);
-  const [drivers,setDrivers]=useState<Driver[]>([]);
-  const [locations,setLocations]=useState<Location[]>([]);
+  const [cars, setCars] = useState<Car[]>([]);
+  const [drivers, setDrivers] = useState<Driver[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
 
   // form data 
-  const [selectedCar,setSelectedCar]=useState("");
-  const [selectedDriver,setSelectedDriver]=useState<string>("");
+  const [selectedCar, setSelectedCar] = useState("");
+  const [selectedDriver, setSelectedDriver] = useState<string>("");
   const [departureLocation, setDepartureLocation] = useState("");
   const [departureTime, setDepartureTime] = useState("");
   const [arrivalLocation, setArrivalLocation] = useState("");
   const [arrivalTime, setArrivalTime] = useState("");
+  const [totalSeats, setTotalSeats] = useState<number>(40); // Changed to number type
   const [price, setPrice] = useState("");
   const [operatorId, setOperatorId] = useState("");
 
@@ -37,22 +37,19 @@ export default function NewTrip() {
     console.log(Cookies.get('token'))
     e.preventDefault();
     const idempotencyKey = uuidv4();
-
+    
     const tripData = {
-      // car:selectedCar,
-      
-      driver:selectedDriver,
+      driver: selectedDriver,
       departure_location: departureLocation,
-      departure_time: new Date(`2024-03-19T${departureTime}`),
+      departure_time: departureTime,  // Just send the time string
       arrival_location: arrivalLocation,
-      arrival_time: new Date(`2024-03-19T${arrivalTime}`),
+      arrival_time: arrivalTime,      // Just send the time string
       price: price,
       operator: operatorId,
-      idempotency_key:idempotencyKey,
-      car:selectedCar,
+      idempotency_key: idempotencyKey,
+      car: selectedCar,
+      total_seats: parseInt(totalSeats.toString(), 10) 
     };
-    
-
     try {
       const response = await fetch(`${API_URL}/trips/`, {
         method: "POST",
@@ -70,11 +67,11 @@ export default function NewTrip() {
       toast.success("Trip added successfully")
     } catch (error) {
       console.error(error);
-      toast.error("Error occured during adding trip")
+      toast.error("Error occurred during adding trip")
     }
   };
 
-  function get_cars(){
+  function get_cars() {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
 
@@ -86,14 +83,14 @@ export default function NewTrip() {
 
     fetch(`${API_URL}/cars/`, requestOptions)
       .then((response) => response.json())
-      .then((result) =>{ 
+      .then((result) => {
         console.log(result)
         setCars(result.payload)
       })
       .catch((error) => console.error(error));
   }
 
-  function get_drivers(){
+  function get_drivers() {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
 
@@ -108,12 +105,12 @@ export default function NewTrip() {
       .then((result) => {
         console.log(result)
         setDrivers(result.payload)
-      
+
       })
       .catch((error) => console.error(error));
   }
 
-  function get_locations(){
+  function get_locations() {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
 
@@ -132,11 +129,11 @@ export default function NewTrip() {
       .catch((error) => console.error(error));
   }
 
-  useEffect(()=>{
+  useEffect(() => {
     get_cars();
     get_drivers();
     get_locations();
-  },[])
+  }, [])
   return (
     <>
       <form onSubmit={handleSubmit}>
@@ -160,21 +157,21 @@ export default function NewTrip() {
                 Car
               </label>
 
-          <select
-              id="country"
-              className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              required
-              defaultValue=""
-              onChange={(e) => setSelectedCar(e.target.value)}
-            >
-              <option value="">Select Car</option>
-              {cars &&
-                cars.map((car, index) => (
-                  <option key={car.id} value={car.id}>
-                    {car.car_no}
-                  </option>
-                ))}
-            </select>
+              <select
+                id="country"
+                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+                defaultValue=""
+                onChange={(e) => setSelectedCar(e.target.value)}
+              >
+                <option value="">Select Car</option>
+                {cars &&
+                  cars.map((car, index) => (
+                    <option key={car.id} value={car.id}>
+                      {car.car_no}
+                    </option>
+                  ))}
+              </select>
             </div>
             <div className="mb-6 w-full">
               <label
@@ -183,15 +180,6 @@ export default function NewTrip() {
               >
                 Driver
               </label>
-              {/* <select
-                id="country"
-                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              >
-                <option>Keza Majyambere</option>
-                <option>Kaze Munyakazi</option>
-                <option>Majyambere Keza</option>
-              </select> */}
               <select
                 id="country"
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
@@ -222,11 +210,11 @@ export default function NewTrip() {
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
                 value={departureLocation}
-                onChange={(e)=>setDepartureLocation(e.target.value)}
+                onChange={(e) => setDepartureLocation(e.target.value)}
               >
                 <option>Select Departure Location</option>
                 {locations && locations.map((location, index) => (
-                  <option key={location.id} value={location.id}  onClick={() => setDepartureLocation(location.id)}>{location.name}</option>
+                  <option key={location.id} value={location.id} onClick={() => setDepartureLocation(location.id)}>{location.name}</option>
                 ))}
               </select>
             </div>
@@ -269,7 +257,7 @@ export default function NewTrip() {
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
                 value={departureTime}
-                onChange={(e)=>setDepartureTime(e.target.value)}
+                onChange={(e) => setDepartureTime(e.target.value)}
               />
             </div>
             <div className="mb-6 w-full">
@@ -286,7 +274,7 @@ export default function NewTrip() {
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
                 value={arrivalTime}
-                onChange={(e)=>setArrivalTime(e.target.value)}
+                onChange={(e) => setArrivalTime(e.target.value)}
               />
             </div>
           </div>
@@ -305,7 +293,7 @@ export default function NewTrip() {
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
                 value={price}
-                onChange={(e)=>setPrice(e.target.value)}
+                onChange={(e) => setPrice(e.target.value)}
               />
             </div>
             <div className="mb-6 w-full">
@@ -318,17 +306,34 @@ export default function NewTrip() {
               <select
                 id="country"
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-     
+
               >
-                <option>One Time</option>
-                <option>Once a week</option>
-                <option>Twice a week</option>
+                <option>Daily</option>
               </select>
+            </div>
+          </div>
+          <div className="flex justify-between items-center space-x-4">
+            <div className="mb-6 w-full">
+              <label
+                htmlFor="totalSeats"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Total Seats
+              </label>
+              <input
+                type="number"
+                id="totalSeats"
+                placeholder="40"
+                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+                value={totalSeats}
+                onChange={(e) => setTotalSeats(parseInt(e.target.value) || 0)}
+              />
             </div>
           </div>
         </div>
       </form>
-      <ToastContainer/>
+      <ToastContainer />
     </>
   );
 }

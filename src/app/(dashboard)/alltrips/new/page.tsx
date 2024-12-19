@@ -334,9 +334,7 @@ export default function NewTrip() {
                 // value={}
                 // onChange={(e)=>setSelectedCar(e.target.value)}
               >
-                <option>One Time</option>
-                <option>Once a week</option>
-                <option>Twice a week</option>
+                <option>Daily</option>
               </select>
             </div>
           </div>
