@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useEffect, useState,ChangeEvent } from "react";
 import { FiEye } from "react-icons/fi";
 import { Traveller } from "../alltrips/interfaces";
+import { API_URL } from "@/constants/Constants";
 
 export default function Travelers() {
   const [travelers, setTravelers] = useState<Traveller[]>([]);
@@ -21,7 +22,7 @@ export default function Travelers() {
       headers: myHeaders,
     };
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}travelers/`, requestOptions)
+    fetch(`${API_URL}/travelers/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setTravelers(result.payload);

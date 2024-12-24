@@ -10,6 +10,7 @@ import {
   FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
+import { API_URL } from "@/constants/Constants";
 import { zodResolver } from "@hookform/resolvers/zod";
 import axios from "axios";
 import Cookies from "js-cookie";
@@ -46,9 +47,8 @@ export default function Login() {
   const handleLogin = async (values: z.infer<typeof formSchema>) => {
     setLoading(true);
     setError(null);
-    console.log(`${process.env.NEXT_PUBLIC_API_URL}`);
     await axios
-      .post(`${process.env.NEXT_PUBLIC_API_URL}login/`, {
+      .post(`${API_URL}/login/`, {
         identifier: values.identifier,
         password: values.password,
       })
@@ -58,8 +58,6 @@ export default function Login() {
 
         Cookies.set("token", token);
         Cookies.set("currentUser", currentUser);
-        console.log("API_URL");
-        console.log(process.env.NEXT_PUBLIC_API_URL);
         setLoading(false);
         push("/");
       })
@@ -78,7 +76,7 @@ export default function Login() {
       <div className="mx-auto md:h-screen flex flex-col justify-center items-center px-6 pt-8 pt:mt-0">
         <div className="flex justify-center items-center mb-8 lg:mb-10">
           <Image
-            src="/logo.svg"
+            src="/img/logo.svg"
             className="h-10 mr-4"
             width={100}
             height={100}

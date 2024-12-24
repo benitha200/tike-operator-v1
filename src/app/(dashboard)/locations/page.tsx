@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState, useEffect } from "react";
 import { FiEdit, FiPlus, FiTrash } from "react-icons/fi";
 import { Location } from "../trips/interfaces";
+import { API_URL } from "@/constants/Constants";
 
 export default function Locations() {
   const [data, setData] = useState<Location[]>([]);
@@ -36,7 +37,7 @@ export default function Locations() {
       headers: myHeaders,
     };
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}locations/`, requestOptions)
+    fetch(`${API_URL}/locations/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setData(result.payload);
@@ -67,7 +68,7 @@ export default function Locations() {
         redirect: "follow" as RequestRedirect,
       };
 
-      fetch(`${process.env.NEXT_PUBLIC_API_URL}locations/${locationToDelete}`, requestOptions)
+      fetch(`http://127.0.0.1:3010/locations/${locationToDelete}`, requestOptions)
         .then((response) => response.text())
         .then((result) => {
           console.log(result);
@@ -150,13 +151,13 @@ export default function Locations() {
                           </div>
                         </td>
                         <td className="p-4 whitespace-nowrap space-x-2">
-                          {/* <Link
+                          <Link
                             href={`/locations/${location.id}`}
                             className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
                           >
                             <FiEdit className="mr-2" />
                             Edit
-                          </Link> */}
+                          </Link>
                           <button
                             type="button"
                             onClick={() => handleDeleteClick(location.id)}
@@ -246,7 +247,7 @@ export default function Locations() {
 //         // redirect: "follow"
 //       };
 
-//       fetch(`${process.env.NEXT_PUBLIC_API_URL}locations/`, requestOptions)
+//       fetch("http://localhost:3010/locations/", requestOptions)
 //         .then((response) => response.json())
 //         .then((result) => {
 //           console.log(result)

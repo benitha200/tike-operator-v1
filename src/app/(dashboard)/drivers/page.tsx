@@ -3,6 +3,7 @@ import { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { FiEdit, FiPlus, FiTrash } from 'react-icons/fi';
 import Cookies from 'js-cookie';
+import { API_URL } from '@/constants/Constants';
 
 type DriversData = {
   id: string;
@@ -50,7 +51,7 @@ export default function Drivers() {
         headers: myHeaders,
       };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}drivers/`, requestOptions);
+      const response = await fetch(`${API_URL}/drivers/`, requestOptions);
 
       if (!response.ok) {
         throw new Error(`Failed to fetch drivers: ${response.statusText}`);
@@ -88,7 +89,7 @@ export default function Drivers() {
           redirect: "follow" as RequestRedirect,
         };
 
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}drivers/${driverToDelete}`, requestOptions);
+        const response = await fetch(`http://127.0.0.1:3010/drivers/${driverToDelete}`, requestOptions);
 
         if (!response.ok) {
           throw new Error(`Failed to delete driver: ${response.statusText}`);

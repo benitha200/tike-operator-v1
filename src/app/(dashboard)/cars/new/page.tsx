@@ -17,6 +17,7 @@ import {
   FormLabel,
   FormMessage,
 } from "@/components/ui/form";
+import { API_URL } from '@/constants/Constants';
 
 export default function NewCar() {
   const [loading, setLoading] = useState<boolean>(false);
@@ -43,6 +44,52 @@ export default function NewCar() {
   console.log("operator Id");
   console.log(operatorId);
 
+  // const handleSubmit = async (e: React.FormEvent) => {
+  //   e.preventDefault();
+  //   const myHeaders = new Headers();
+  //   myHeaders.append("Content-Type", "application/json");
+  
+  //   const token = Cookies.get('token');
+  //   if (token) {
+  //     myHeaders.append("Authorization", `Bearer ${token}`);
+  //   }
+  
+  //   const idempotencyKey = uuidv4();
+  //   const raw = JSON.stringify({
+  //     "idempotency_key": idempotencyKey,
+  //     "car_no": carNo,
+  //     "immatriculation_no": carNo,
+  //     "brand": brand,
+  //     "model": model,
+  //     "type": type,
+  //     "operator": operatorId,
+  //     "number_of_seats":pseats
+  //   });
+  
+  //   const requestOptions = {
+  //     method: "POST",
+  //     headers: myHeaders,
+  //     body: raw,
+  //   };
+  
+  //   try {
+  //     const response = await fetch(`${API_URL}/cars/`, requestOptions);
+  //     if (!response.ok) {
+  //       throw new Error('Network response was not ok');
+  //     }
+  //     const result = await response.json();
+  //     console.log(result);
+  //     toast.success("Car added successfully!");
+      
+  //     // Redirect to "/cars" after successful addition
+  //     window.location.href = "/cars";
+  //   } catch (error) {
+  //     console.error(error);
+  //     toast.error("Failed to add car");
+  //   }
+  // };
+
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     const myHeaders = new Headers();
@@ -54,40 +101,47 @@ export default function NewCar() {
     }
   
     const idempotencyKey = uuidv4();
-    const raw = JSON.stringify({
-      "idempotency_key": idempotencyKey,
-      "car_no": carNo,
-      "immatriculation_no": carNo,
-      "brand": brand,
-      "model": model,
-      "number_of_seats":pseats,
-      "type": type,
-      "operator": operatorId,
-    });
+    
+    // Create the payload object first to verify all fields
+    const payload = {
+      idempotency_key: idempotencyKey,
+      car_no: carNo,
+      immatriculation_no: carNo,  // Explicitly ensure this is included
+      brand: brand,
+      model: model,
+      type: type,
+      operator: operatorId,
+      number_of_seats: pseats
+    };
+  
+    // Log the payload for verification
+    console.log('Sending payload:', payload);
   
     const requestOptions = {
       method: "POST",
       headers: myHeaders,
-      body: raw,
+      body: JSON.stringify(payload)  // Stringify the verified payload
     };
   
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}cars/`, requestOptions);
+      const response = await fetch(`${API_URL}/cars/`, requestOptions);
       if (!response.ok) {
-        throw new Error('Network response was not ok');
+        const errorData = await response.json();
+        console.error('Error response:', errorData);
+        throw new Error(errorData.metaData?.message?.[0] || 'Network response was not ok');
       }
       const result = await response.json();
-      console.log(result);
+      console.log('Success:', result);
       toast.success("Car added successfully!");
       
       // Redirect to "/cars" after successful addition
       window.location.href = "/cars";
     } catch (error) {
-      console.error(error);
-      toast.error("Failed to add car");
+      console.error('Error:', error);
+      toast.error(error instanceof Error ? error.message : "Failed to add car");
     }
   };
-
+  
   return (
     <>
       <form onSubmit={handleSubmit} className="mt-8 space-y-6">
@@ -179,159 +233,21 @@ export default function NewCar() {
                 htmlFor="seat_count"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
-                How many passenger seats?
+                How many Total seats?
               </label>
               <input
                 type="number"
                 id="seat_count"
-                placeholder="30"
+                placeholder="40"
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
                 value={pseats}
                 onChange={(e)=>setPseats(e.target.value)}
               />
             </div>
-            <div className="mb-6 w-full pl-2">
-              <label
-                htmlFor="window_seat_count"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                How many window seats?
-              </label>
-              <input
-                type="number"
-                id="window_seat_count"
-                placeholder="6"
-                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-                value={wseats}
-                onChange={(e)=>setWseats(e.target.value)}
-              />
-            </div>
           </div>
-          <div className="flex justify-between items-center">
-            <div className="mb-6 w-full pr-2">
-              <label
-                htmlFor="hold_luggage_count"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                How many luggages per passenger allowed?
-              </label>
-              <input
-                type="number"
-                id="hold_luggage_count"
-                placeholder="2"
-                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              />
-            </div>
-            <div className="mb-6 w-full pl-2">
-              <label
-                htmlFor="carry_on_luggage_count"
-                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-              >
-                How many carry-on luggages allowed?
-              </label>
-              <input
-                type="number"
-                id="carry_on_luggage_count"
-                placeholder="1"
-                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                required
-              />
-            </div>
-          </div>
-          {/* <div>
-            <span className="block mb-2 text-sm font-medium text-gray-900 dark:text-white">
-              Ammenities (Tick if it applies)
-            </span>
-            <div className="flex justify-between items-center mt-6">
-              <div className="mb-6 w-full px-2">
-                <label
-                  htmlFor="tag_luggage"
-                  className="relative inline-flex items-center mb-4 cursor-pointer"
-                >
-                  <input type="checkbox" value="" className="sr-only peer" />
-                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Tagged Luggages
-                  </span>
-                </label>
-              </div>
-              <div className="mb-6 w-full px-2">
-                <label
-                  htmlFor="live_tracking"
-                  className="relative inline-flex items-center mb-4 cursor-pointer"
-                >
-                  <input type="checkbox" value="" className="sr-only peer" />
-                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Live Tracking
-                  </span>
-                </label>
-              </div>
-              <div className="mb-6 w-full px-2">
-                <label
-                  htmlFor="reclining_seat"
-                  className="relative inline-flex items-center mb-4 cursor-pointer"
-                >
-                  <input type="checkbox" value="" className="sr-only peer" />
-                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Reclining Seat
-                  </span>
-                </label>
-              </div>
-              <div className="mb-6 w-full px-2">
-                <label
-                  htmlFor="power_outlets"
-                  className="relative inline-flex items-center mb-4 cursor-pointer"
-                >
-                  <input type="checkbox" value="" className="sr-only peer" />
-                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Power Outlets
-                  </span>
-                </label>
-              </div>
-              <div className="mb-6 w-full px-2">
-                <label
-                  htmlFor="air_conditioning"
-                  className="relative inline-flex items-center mb-4 cursor-pointer"
-                >
-                  <input type="checkbox" value="" className="sr-only peer" />
-                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Air Conditioning
-                  </span>
-                </label>
-              </div>
-              <div className="mb-6 w-full px-2">
-                <label
-                  htmlFor="blanket"
-                  className="relative inline-flex items-center mb-4 cursor-pointer"
-                >
-                  <input type="checkbox" value="" className="sr-only peer" />
-                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Blanket
-                  </span>
-                </label>
-              </div>
-              <div className="mb-6 w-full px-2">
-                <label
-                  htmlFor="pillow"
-                  className="relative inline-flex items-center mb-4 cursor-pointer"
-                >
-                  <input type="checkbox" value="" className="sr-only peer" />
-                  <div className="w-11 h-6 bg-gray-200 rounded-full peer peer-focus:ring-4 peer-focus:ring-blue-300 dark:peer-focus:ring-blue-800 dark:bg-gray-700 peer-checked:after:translate-x-full peer-checked:after:border-white after:content-[''] after:absolute after:top-0.5 after:left-[2px] after:bg-white after:border-gray-300 after:border after:rounded-full after:h-5 after:w-5 after:transition-all dark:border-gray-600 peer-checked:bg-blue-600"></div>
-                  <span className="ml-3 text-sm font-medium text-gray-900 dark:text-gray-300">
-                    Pillow
-                  </span>
-                </label>
-              </div>
-            </div>
-          </div> */}
+    
+          
         </div> 
         </form>
         <ToastContainer />

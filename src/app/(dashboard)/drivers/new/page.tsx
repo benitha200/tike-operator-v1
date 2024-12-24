@@ -19,6 +19,7 @@ import {
 } from "@/components/ui/form";
 import { toast,ToastContainer } from 'react-toastify';
 import 'react-toastify/dist/ReactToastify.css';
+import { API_URL } from '@/constants/Constants';
 
 
 const formSchema = z.object({
@@ -76,7 +77,7 @@ export default function NewCar() {
         body:JSON.stringify(requestBody),
       };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}drivers/`, requestOptions);
+      const response = await fetch(`${API_URL}/drivers/`, requestOptions);
 
       if (!response.ok) {
         throw new Error(`Failed to submit the form: ${response.statusText}`);

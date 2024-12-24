@@ -64,6 +64,7 @@ import Cookies from "js-cookie";
 import { v4 as uuidv4 } from 'uuid';
 import { ToastContainer,toast } from "react-toastify";
 import 'react-toastify/dist/ReactToastify.css';
+import { API_URL } from "@/constants/Constants";
 
 export default function NewLocation() {
   const [formData, setFormData] = useState({
@@ -97,7 +98,7 @@ export default function NewLocation() {
     };
 
     try {
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}locations/`, requestOptions);
+      const response = await fetch(`${API_URL}/locations/`, requestOptions);
       const result = await response.json();
       console.log(result);
       toast.success("Location created successfully!");

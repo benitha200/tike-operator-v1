@@ -7,6 +7,7 @@ import { Trip } from "../interfaces";
 import { Car } from "../interfaces";
 import { Driver } from "../interfaces";
 import { Location } from "../interfaces";
+import { API_URL } from "@/constants/Constants";
 
 
 export default function ViewTrip() {
@@ -29,28 +30,28 @@ export default function ViewTrip() {
         const token = Cookies.get("token");
 
         // Fetch trip details
-        const tripResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}trips/` + window.location.pathname.split("/").pop(), {
+        const tripResponse = await fetch(`${API_URL}/trips/` + window.location.pathname.split("/").pop(), {
           headers: { Authorization: `Bearer ${token}` },
         });
         const tripData = await tripResponse.json();
         setTrip(tripData.payload);
 
         // Fetch locations
-        const locationsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}locations/`, {
+        const locationsResponse = await fetch(`${API_URL}/locations/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const locationsData = await locationsResponse.json();
         setLocations(locationsData.payload);
 
         // Fetch cars
-        const carsResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}cars/`, {
+        const carsResponse = await fetch(`${API_URL}/cars/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const carsData = await carsResponse.json();
         setCars(carsData.payload);
 
         // Fetch drivers
-        const driversResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL}drivers/`, {
+        const driversResponse = await fetch(`${API_URL}/drivers/`, {
           headers: { Authorization: `Bearer ${token}` },
         });
         const driversData = await driversResponse.json();
@@ -92,7 +93,7 @@ export default function ViewTrip() {
         recurring_time: recurringTime,
       };
 
-      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}trips/` + trip?.id, {
+      const response = await fetch(`${API_URL}/trips/` + trip?.id, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
@@ -255,9 +256,7 @@ export default function ViewTrip() {
               onChange={(e) => setRecurringTime(e.target.value)}
               required
             >
-              <option>One Time</option>
-              <option>Once a week</option>
-              <option>Twice a week</option>
+              <option>Daily</option>
             </select>
           </div>
         </div>

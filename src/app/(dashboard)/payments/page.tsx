@@ -1,323 +1,529 @@
-"use client"
-import Cookies from "js-cookie";
-import { useEffect, useState } from "react";
-import {
-    Card,
-    CardHeader,
-    CardTitle,
-    CardContent,
-    CardFooter,
-} from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Checkbox } from "@/components/ui/checkbox";
-import { BiInfoCircle } from "react-icons/bi";
-import { BsInfoCircle } from "react-icons/bs";
+// "use client"
 
-interface Payment {
-    id: string;
-    requestTransactionId: string;
-    transactionId: string;
-    amount: string;
-    phoneNumber: string;
-    status: string;
-    responseCode: string;
-    callbackPayload: {
-        status: string;
-        message: string;
-        success: boolean;
-        responsecode: string;
-        transactionid: string;
-        requesttransactionid: string;
-    };
-    bookingId: string;
-    createdAt: string;
-    updatedAt: string;
-    booking: {
-        id: string;
-        price: number;
-        is_one_way: boolean;
-        notes: string | null;
-        canceled: boolean;
-        payment_status: string;
-        payment_reference: string;
-        createdAt: string;
-        updatedAt: string;
-    };
+// import React, { useState, useEffect } from 'react';
+
+// interface PaymentBooking {
+//   id: string;
+//   price: number;
+//   is_one_way: boolean;
+//   notes: string | null;
+//   canceled: boolean;
+//   payment_status: string;
+//   payment_reference: string | null;
+//   createdAt: string;
+//   updatedAt: string;
+//   seat_number: string;
+// }
+
+// interface Payment {
+//   id: string;
+//   requestTransactionId: string;
+//   transactionId: string | null;
+//   amount: string;
+//   phoneNumber: string;
+//   status: 'PAID' | 'FAILED';
+//   responseCode: string;
+//   callbackPayload: {
+//     data?: {
+//       amount: number;
+//       transID: string;
+//     };
+//     stack?: string;
+//     message?: string;
+//     status?: number;
+//   };
+//   bookingId: string;
+//   createdAt: string;
+//   updatedAt: string;
+//   booking: PaymentBooking;
+// }
+
+// interface ApiResponse {
+//   payload: Payment[];
+// }
+
+// const PaymentDashboard = () => {
+//   const [payments, setPayments] = useState<Payment[] | null>(null);
+//   const [loading, setLoading] = useState(true);
+//   const [error, setError] = useState<string | null>(null);
+//   const [searchTerm, setSearchTerm] = useState<string>("");
+//   const [currentPage, setCurrentPage] = useState<number>(1);
+//   const [paymentsPerPage] = useState<number>(20);
+
+//   useEffect(() => {
+//     const fetchPayments = async () => {
+//       try {
+//         setLoading(true);
+//         const response = await fetch('http://localhost:3010/payments');
+//         if (!response.ok) {
+//           throw new Error('Failed to fetch payments');
+//         }
+//         const data: ApiResponse = await response.json();
+//         setPayments(data.payload); // Access the payments through the payload property
+//         setError(null);
+//       } catch (err) {
+//         setError(err instanceof Error ? err.message : 'An error occurred while fetching payments');
+//         setPayments(null);
+//       } finally {
+//         setLoading(false);
+//       }
+//     };
+
+//     fetchPayments();
+//   }, []);
+
+//   const formatDate = (dateString: string): string => {
+//     return new Date(dateString).toLocaleString();
+//   };
+
+//   const formatAmount = (amount: string): string => {
+//     return new Intl.NumberFormat('en-US', {
+//       style: 'currency',
+//       currency: 'RWF'
+//     }).format(Number(amount));
+//   };
+
+//   const filteredPayments = payments?.filter((payment) =>
+//     payment.phoneNumber.toLowerCase().includes(searchTerm.toLowerCase())
+//   );
+
+//   // Pagination logic
+//   const indexOfLastPayment = currentPage * paymentsPerPage;
+//   const indexOfFirstPayment = indexOfLastPayment - paymentsPerPage;
+//   const currentPayments = filteredPayments?.slice(
+//     indexOfFirstPayment,
+//     indexOfLastPayment
+//   );
+
+//   const paginate = (pageNumber: number): void => setCurrentPage(pageNumber);
+
+//   const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+//     setSearchTerm(e.target.value);
+//     setCurrentPage(1); // Reset to first page when searching
+//   };
+
+//   if (loading) {
+//     return (
+//       <div className="flex items-center justify-center min-h-screen">
+//         <div className="text-cyan-600">Loading payments...</div>
+//       </div>
+//     );
+//   }
+
+//   if (error) {
+//     return (
+//       <div className="flex items-center justify-center min-h-screen">
+//         <div className="text-red-600">Error: {error}</div>
+//       </div>
+//     );
+//   }
+
+//   return (
+//     <>
+//       <div className="flex justify-between items-center p-5 bg-white border-b border-gray-200">
+//         <h2 className="text-xl font-semibold">Payment Transactions</h2>
+//         <form>
+//           <div className="sm:w-64 xl:w-96">
+//             <input
+//               type="text"
+//               className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+//               placeholder="Search by phone number"
+//               value={searchTerm}
+//               onChange={handleSearchChange}
+//             />
+//           </div>
+//         </form>
+//       </div>
+
+//       <div className="flex flex-col">
+//         <div className="overflow-x-auto">
+//           <div className="align-middle inline-block min-w-full">
+//             <div className="shadow overflow-hidden">
+//               <table className="table-fixed min-w-full divide-y divide-gray-200">
+//                 <thead className="bg-gray-100">
+//                   <tr>
+//                     <th scope="col" className="p-4">
+//                       <div className="flex items-center">
+//                         <input
+//                           type="checkbox"
+//                           className="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"
+//                         />
+//                       </div>
+//                     </th>
+//                     <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+//                       Transaction ID
+//                     </th>
+//                     <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+//                       Amount
+//                     </th>
+//                     <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+//                       Status
+//                     </th>
+//                     <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+//                       Phone Number
+//                     </th>
+//                     <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+//                       Seat Number
+//                     </th>
+//                     <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+//                       Date
+//                     </th>
+//                   </tr>
+//                 </thead>
+//                 <tbody className="bg-white divide-y divide-gray-200">
+//                   {currentPayments?.map((payment) => (
+//                     <tr key={payment.id} className="hover:bg-gray-100">
+//                       <td className="p-4 w-4">
+//                         <div className="flex items-center">
+//                           <input
+//                             type="checkbox"
+//                             className="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"
+//                           />
+//                         </div>
+//                       </td>
+//                       <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
+//                         <div className="text-base font-semibold text-gray-900">
+//                           {payment.transactionId || 'N/A'}
+//                         </div>
+//                       </td>
+//                       <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+//                         {formatAmount(payment.amount)}
+//                       </td>
+//                       <td className="p-4 whitespace-nowrap">
+//                         <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full 
+//                           ${payment.status === 'PAID' ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-800'}`}>
+//                           {payment.status}
+//                         </span>
+//                       </td>
+//                       <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+//                         {payment.phoneNumber}
+//                       </td>
+//                       <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+//                         {payment.booking?.seat_number || 'N/A'}
+//                       </td>
+//                       <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+//                         {formatDate(payment.createdAt)}
+//                       </td>
+//                     </tr>
+//                   ))}
+//                 </tbody>
+//               </table>
+//             </div>
+//           </div>
+//         </div>
+//       </div>
+
+//       {/* Pagination */}
+//       <div className="bg-white sticky sm:flex items-center w-full sm:justify-between bottom-0 right-0 border-t border-gray-200 p-4">
+//         <div className="flex items-center mb-4 sm:mb-0">
+//           <span className="text-sm font-normal text-gray-500">
+//             Showing{" "}
+//             <span className="text-gray-900 font-semibold">
+//               {indexOfFirstPayment + 1}-
+//               {Math.min(indexOfLastPayment, filteredPayments?.length || 0)}
+//             </span>{" "}
+//             of{" "}
+//             <span className="text-gray-900 font-semibold">
+//               {filteredPayments?.length}
+//             </span>{" "}
+//             payments
+//           </span>
+//         </div>
+//         <div className="flex items-center space-x-3">
+//           <button
+//             onClick={() => paginate(currentPage - 1)}
+//             disabled={currentPage === 1}
+//             className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center disabled:opacity-50"
+//           >
+//             Previous
+//           </button>
+//           <button
+//             onClick={() => paginate(currentPage + 1)}
+//             disabled={indexOfLastPayment >= (filteredPayments?.length || 0)}
+//             className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center disabled:opacity-50"
+//           >
+//             Next
+//           </button>
+//         </div>
+//       </div>
+//     </>
+//   );
+// };
+
+// export default PaymentDashboard;
+
+"use client"
+
+import React, { useState, useEffect } from 'react';
+
+interface PaymentBooking {
+  id: string;
+  price: number;
+  is_one_way: boolean;
+  notes: string | null;
+  canceled: boolean;
+  payment_status: string;
+  payment_reference: string | null;
+  createdAt: string;
+  updatedAt: string;
+  seat_number: string;
 }
 
-const Payments = () => {
-    const [payments, setPayments] = useState<Payment[]>([]);
-    const [filteredPayments, setFilteredPayments] = useState<Payment[]>([]);
-    const [searchTerm, setSearchTerm] = useState("");
-    const [paymentStatus, setPaymentStatus] = useState<"all" | "paid" | "unpaid">("all");
-    const [currentPage, setCurrentPage] = useState(1);
-    const [paymentsPerPage] = useState(10);
-    const [totalPayments, setTotalPayments] = useState(0);
-    const [totalPaid, setTotalPaid] = useState(0);
-    const [totalUnpaid, setTotalUnpaid] = useState(0);
+interface Payment {
+  id: string;
+  requestTransactionId: string;
+  transactionId: string | null;
+  amount: string;
+  phoneNumber: string;
+  status: 'PAID' | 'FAILED';
+  responseCode: string;
+  callbackPayload: {
+    data?: {
+      amount: number;
+      transID: string;
+    };
+    stack?: string;
+    message?: string;
+    status?: number;
+  };
+  bookingId: string;
+  createdAt: string;
+  updatedAt: string;
+  booking: PaymentBooking;
+}
 
-    useEffect(() => {
-        const myHeaders = new Headers();
-        myHeaders.append("Authorization", `Bearer ${Cookies.get("token")}`);
+interface ApiResponse {
+  payload: Payment[];
+}
 
-        const requestOptions = {
-            method: "GET",
-            headers: myHeaders,
-        };
+const PaymentDashboard = () => {
+  const [payments, setPayments] = useState<Payment[] | null>(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [searchTerm, setSearchTerm] = useState<string>("");
+  const [currentPage, setCurrentPage] = useState<number>(1);
+  const [paymentsPerPage] = useState<number>(20);
+  const [mounted, setMounted] = useState(false);
 
-        fetch(`${process.env.NEXT_PUBLIC_API_URL}payments/`, requestOptions)
-            .then((response) => response.json())
-            .then((result) => {
-                setPayments(result.payload);
-                setFilteredPayments(result.payload);
-            })
-            .catch((error) => console.error(error));
-    }, []);
+  useEffect(() => {
+    setMounted(true);
+  }, []);
 
-    useEffect(() => {
-        const filteredPayments = payments.filter((payment) => {
-            if (searchTerm.trim() !== "") {
-                return (
-                    payment.phoneNumber.includes(searchTerm) ||
-                    payment.transactionId.includes(searchTerm)
-                );
-            }
-            return true;
-        });
-
-        if (paymentStatus !== "all") {
-            filteredPayments.filter(
-                (payment) => payment.status.toLowerCase() === paymentStatus
-            );
+  useEffect(() => {
+    const fetchPayments = async () => {
+      try {
+        setLoading(true);
+        const response = await fetch('http://localhost:3010/payments');
+        if (!response.ok) {
+          throw new Error('Failed to fetch payments');
         }
-
-        setFilteredPayments(filteredPayments);
-
-        // Calculate total amounts
-        const total = filteredPayments.reduce(
-            (sum, payment) => sum + parseFloat(payment.amount),
-            0
-        );
-
-        const paidTotal = filteredPayments
-            .filter((payment) => payment.status === "PAID")
-            .reduce((sum, payment) => sum + parseFloat(payment.amount), 0);
-
-        const unpaidTotal = filteredPayments
-            .filter((payment) => payment.status !== "PAID")
-            .reduce((sum, payment) => sum + parseFloat(payment.amount), 0);
-
-        setTotalPayments(total);
-        setTotalPaid(paidTotal);
-        setTotalUnpaid(unpaidTotal);
-    }, [payments, searchTerm, paymentStatus]);
-
-    // Logic for pagination
-    const indexOfLastPayment = currentPage * paymentsPerPage;
-    const indexOfFirstPayment = indexOfLastPayment - paymentsPerPage;
-    const currentPayments = filteredPayments.slice(
-        indexOfFirstPayment,
-        indexOfLastPayment
-    );
-
-    // Change page
-    const paginate = (pageNumber: number) => setCurrentPage(pageNumber);
-
-    const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        setSearchTerm(e.target.value);
+        const data: ApiResponse = await response.json();
+        setPayments(data.payload);
+        setError(null);
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'An error occurred while fetching payments');
+        setPayments(null);
+      } finally {
+        setLoading(false);
+      }
     };
 
-    const handlePaymentStatusChange = (status: "all" | "paid" | "unpaid") => {
-        setPaymentStatus(status);
-    };
+    if (mounted) {
+      fetchPayments();
+    }
+  }, [mounted]);
 
+  const formatDate = (dateString: string): string => {
+    return new Date(dateString).toLocaleString();
+  };
+
+  const formatAmount = (amount: string): string => {
+    return new Intl.NumberFormat('en-US', {
+      style: 'currency',
+      currency: 'RWF'
+    }).format(Number(amount));
+  };
+
+  const filteredPayments = payments?.filter((payment) => 
+    payment.status === 'PAID' && 
+    payment.phoneNumber.toLowerCase().includes(searchTerm.toLowerCase())
+  );
+
+  const totalAmount = filteredPayments?.reduce((sum, payment) => 
+    sum + Number(payment.amount), 0) || 0;
+  const totalTransactions = filteredPayments?.length || 0;
+
+  const indexOfLastPayment = currentPage * paymentsPerPage;
+  const indexOfFirstPayment = indexOfLastPayment - paymentsPerPage;
+  const currentPayments = filteredPayments?.slice(
+    indexOfFirstPayment,
+    indexOfLastPayment
+  );
+
+  const paginate = (pageNumber: number): void => setCurrentPage(pageNumber);
+
+  const handleSearchChange = (e: React.ChangeEvent<HTMLInputElement>): void => {
+    setSearchTerm(e.target.value);
+    setCurrentPage(1);
+  };
+
+  if (!mounted) {
+    return null;
+  }
+
+  if (loading) {
     return (
-        <Card className="w-full">
-            <CardHeader>
-                <Card className="w-full">
-                    <CardHeader>
-                        <CardTitle>All Payments</CardTitle>
-                        <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-                            <Card>
-                                <CardContent className="p-4">
-                                    <div className="flex items-center space-x-2">
-                                        <BsInfoCircle className="h-5 w-5 text-gray-500" />
-                                        <div>
-                                            <p className="text-sm font-medium text-gray-500">Total Payments</p>
-                                            <p className="text-2xl font-bold">
-                                                {totalPayments.toLocaleString('en-US', {
-                                                    style: 'currency',
-                                                    currency: 'RWF'
-                                                })}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-cyan-600">Loading payments...</div>
+      </div>
+    );
+  }
 
-                            <Card>
-                                <CardContent className="p-4">
-                                    <div className="flex items-center space-x-2">
-                                        <BsInfoCircle className="h-5 w-5 text-green-600" />
-                                        <div>
-                                            <p className="text-sm font-medium text-green-600">Total Paid</p>
-                                            <p className="text-2xl font-bold text-green-600">
-                                                {totalPaid.toLocaleString('en-US', {
-                                                    style: 'currency',
-                                                    currency: 'RWF'
-                                                })}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
+  if (error) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="text-red-600">Error: {error}</div>
+      </div>
+    );
+  }
 
-                            <Card>
-                                <CardContent className="p-4">
-                                    <div className="flex items-center space-x-2">
-                                        <BsInfoCircle className="h-5 w-5 text-red-600" />
-                                        <div>
-                                            <p className="text-sm font-medium text-red-600">Total Unpaid</p>
-                                            <p className="text-2xl font-bold text-red-600">
-                                                {totalUnpaid.toLocaleString('en-US', {
-                                                    style: 'currency',
-                                                    currency: 'RWF'
-                                                })}
-                                            </p>
-                                        </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </div>
-                        </CardHeader>
-                        </Card>
+  return (
+    <div className="space-y-6">
+      {/* Summary Cards */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-4 p-5">
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="text-2xl font-bold text-gray-900">
+            {formatAmount(totalAmount.toString())}
+          </div>
+          <div className="text-sm text-gray-500">Total Amount (Paid)</div>
+        </div>
+        <div className="bg-white rounded-lg shadow p-6">
+          <div className="text-2xl font-bold text-gray-900">
+            {totalTransactions}
+          </div>
+          <div className="text-sm text-gray-500">Total Transactions (Paid)</div>
+        </div>
+      </div>
 
-                        <div className="flex space-x-4">
-                            <Input
-                                type="text"
-                                placeholder="Search for Payment"
-                                value={searchTerm}
-                                onChange={handleSearchChange}
-                                className="w-full sm:w-64 xl:w-96"
-                            />
-                            <div className="flex items-center space-x-2">
-                                <Checkbox
-                                    id="payment-status-all"
-                                    checked={paymentStatus === "all"}
-                                    onChange={() => handlePaymentStatusChange("all")}
-                                />
-                                <label htmlFor="payment-status-all">All</label>
-                                <Checkbox
-                                    id="payment-status-paid"
-                                    checked={paymentStatus === "paid"}
-                                    onChange={() => handlePaymentStatusChange("paid")}
-                                />
-                                <label htmlFor="payment-status-paid">Paid</label>
-                                <Checkbox
-                                    id="payment-status-unpaid"
-                                    checked={paymentStatus === "unpaid"}
-                                    onChange={() => handlePaymentStatusChange("unpaid")}
-                                />
-                                <label htmlFor="payment-status-unpaid">Unpaid</label>
-                            </div>
-                        </div>
-                    </CardHeader>
-                    <CardContent>
-                        <table className="table-auto w-full divide-y divide-gray-200">
-                            <thead className="bg-gray-100">
-                                <tr>
-                                    <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                        Transaction ID
-                                    </th>
-                                    <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                        Booking ID
-                                    </th>
-                                    <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                        Phone Number
-                                    </th>
-                                    <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                        Amount
-                                    </th>
-                                    <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                        Status
-                                    </th>
-                                    <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                        Booking
-                                    </th>
-                                    <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                        Created At
-                                    </th>
-                                    <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                                        Updated At
-                                    </th>
-                                </tr>
-                            </thead>
-                            <tbody className="bg-white divide-y divide-gray-200">
-                                {currentPayments.map((payment) => (
-                                    <tr key={payment.id} className="hover:bg-gray-100">
-                                        <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
-                                            {payment.transactionId || "-"}
-                                        </td>
-                                        <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                            {payment.booking.id}
-                                        </td>
-                                        <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                            {payment.phoneNumber}
-                                        </td>
-                                        <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                            {payment.amount}
-                                        </td>
-                                        <td
-                                            className={`p-4 whitespace-nowrap text-base font-medium ${payment.status === "PAID"
-                                                ? "text-green-600"
-                                                : "text-red-600"
-                                                }`}
-                                        >
-                                            {payment.status}
-                                        </td>
+      <div className="flex justify-between items-center p-5 bg-white border-b border-gray-200">
+        <h2 className="text-xl font-semibold">Paid Transactions</h2>
+        <form>
+          <div className="sm:w-64 xl:w-96">
+            <input
+              type="text"
+              className="bg-gray-50 border border-gray-300 text-gray-900 sm:text-sm rounded-lg focus:ring-cyan-600 focus:border-cyan-600 block w-full p-2.5"
+              placeholder="Search by phone number"
+              value={searchTerm}
+              onChange={handleSearchChange}
+            />
+          </div>
+        </form>
+      </div>
 
-                                        <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                            {new Date(payment.createdAt).toLocaleString()}
-                                        </td>
-                                        <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                                            {new Date(payment.updatedAt).toLocaleString()}
-                                        </td>
-                                    </tr>
-                                ))}
-                            </tbody>
-                        </table>
-                    </CardContent>
-                    <CardFooter className="flex justify-between items-center">
-                        <div className="text-sm font-normal text-gray-500">
-                            Showing{" "}
-                            <span className="text-gray-900 font-semibold">
-                                {indexOfFirstPayment + 1}-
-                                {Math.min(indexOfLastPayment, filteredPayments.length)}
-                            </span>{" "}
-                            of{" "}
-                            <span className="text-gray-900 font-semibold">
-                                {filteredPayments.length}
-                            </span>{" "}
-                            payments
+      <div className="flex flex-col">
+        <div className="overflow-x-auto">
+          <div className="align-middle inline-block min-w-full">
+            <div className="shadow overflow-hidden rounded-lg">
+              <table className="table-fixed min-w-full divide-y divide-gray-200">
+                <thead className="bg-gray-100">
+                  <tr>
+                    <th scope="col" className="p-4">
+                      <div className="flex items-center">
+                        <input
+                          type="checkbox"
+                          className="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"
+                        />
+                      </div>
+                    </th>
+                    <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+                      Transaction ID
+                    </th>
+                    <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+                      Amount
+                    </th>
+                    <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+                      Phone Number
+                    </th>
+                    <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+                      Seat Number
+                    </th>
+                    <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+                      Date
+                    </th>
+                  </tr>
+                </thead>
+                <tbody className="bg-white divide-y divide-gray-200">
+                  {currentPayments?.map((payment) => (
+                    <tr key={payment.id} className="hover:bg-gray-100">
+                      <td className="p-4 w-4">
+                        <div className="flex items-center">
+                          <input
+                            type="checkbox"
+                            className="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"
+                          />
                         </div>
-                        <div className="flex items-center space-x-3">
-                            <Button
-                                onClick={() => paginate(currentPage - 1)}
-                                disabled={currentPage === 1}
-                            >
-                                Previous
-                            </Button>
-                            <Button
-                                onClick={() => paginate(currentPage + 1)}
-                                disabled={indexOfLastPayment >= filteredPayments.length}
-                            >
-                                Next
-                            </Button>
+                      </td>
+                      <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
+                        <div className="text-base font-semibold text-gray-900">
+                          {payment.transactionId || 'N/A'}
                         </div>
-                    </CardFooter>
-                </Card>
-                );
+                      </td>
+                      <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                        {formatAmount(payment.amount)}
+                      </td>
+                      <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                        {payment.phoneNumber}
+                      </td>
+                      <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                        {payment.booking?.seat_number || 'N/A'}
+                      </td>
+                      <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                        {formatDate(payment.createdAt)}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      {/* Pagination */}
+      <div className="bg-white sticky sm:flex items-center w-full sm:justify-between bottom-0 right-0 border-t border-gray-200 p-4">
+        <div className="flex items-center mb-4 sm:mb-0">
+          <span className="text-sm font-normal text-gray-500">
+            Showing{" "}
+            <span className="text-gray-900 font-semibold">
+              {indexOfFirstPayment + 1}-
+              {Math.min(indexOfLastPayment, filteredPayments?.length || 0)}
+            </span>{" "}
+            of{" "}
+            <span className="text-gray-900 font-semibold">
+              {filteredPayments?.length}
+            </span>{" "}
+            payments
+          </span>
+        </div>
+        <div className="flex items-center space-x-3">
+          <button
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center disabled:opacity-50"
+          >
+            Previous
+          </button>
+          <button
+            onClick={() => paginate(currentPage + 1)}
+            disabled={indexOfLastPayment >= (filteredPayments?.length || 0)}
+            className="flex-1 text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center justify-center rounded-lg text-sm px-3 py-2 text-center disabled:opacity-50"
+          >
+            Next
+          </button>
+        </div>
+      </div>
+    </div>
+  );
 };
 
-                export default Payments;
+export default PaymentDashboard;

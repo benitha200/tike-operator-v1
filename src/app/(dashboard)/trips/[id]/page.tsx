@@ -5,6 +5,7 @@ import { FiCheck } from "react-icons/fi";
 import { Trip } from "../interfaces";
 import { Driver } from "../interfaces";
 import { Location } from "../interfaces";
+import { API_URL } from "@/constants/Constants";
 
 export default function ViewTrip() {
 
@@ -30,7 +31,7 @@ export default function ViewTrip() {
       // redirect: "follow"
     };
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}locations/`, requestOptions)
+    fetch(`${API_URL}/locations/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
@@ -49,7 +50,7 @@ export default function ViewTrip() {
       headers: myHeaders
     };
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}cars/`, requestOptions)
+    fetch(`${API_URL}/cars/`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         console.log(result)
@@ -73,7 +74,7 @@ export default function ViewTrip() {
       headers: myHeaders
     };
     
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}trips/${tripId}`, requestOptions)
+    fetch(`${API_URL}/trips/${tripId}`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         setTrip(result.payload);
@@ -91,7 +92,7 @@ export default function ViewTrip() {
       // redirect: "follow"
     };
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}drivers/`, requestOptions)
+    fetch(`${API_URL}/drivers/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
@@ -314,9 +315,7 @@ export default function ViewTrip() {
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
               >
-                <option>One Time</option>
-                <option>Once a week</option>
-                <option>Twice a week</option>
+                <option>Daily</option>
               </select>
             </div>
           </div>
