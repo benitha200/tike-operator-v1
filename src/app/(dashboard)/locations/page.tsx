@@ -68,7 +68,7 @@ export default function Locations() {
         redirect: "follow" as RequestRedirect,
       };
 
-      fetch(`http://127.0.0.1:3010/locations/${locationToDelete}`, requestOptions)
+      fetch(`${API_URL}/locations/${locationToDelete}`, requestOptions)
         .then((response) => response.text())
         .then((result) => {
           console.log(result);

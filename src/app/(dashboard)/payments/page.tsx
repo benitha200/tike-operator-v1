@@ -254,6 +254,7 @@
 
 "use client"
 
+import { API_URL } from '@/constants/Constants';
 import React, { useState, useEffect } from 'react';
 
 interface PaymentBooking {
@@ -313,7 +314,7 @@ const PaymentDashboard = () => {
     const fetchPayments = async () => {
       try {
         setLoading(true);
-        const response = await fetch('http://localhost:3010/payments');
+        const response = await fetch(`${API_URL}/payments`);
         if (!response.ok) {
           throw new Error('Failed to fetch payments');
         }

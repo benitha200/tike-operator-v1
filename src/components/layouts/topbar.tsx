@@ -159,7 +159,7 @@ function Topbar({ onMenuToggle }: TopbarProps) {
     Object.keys(Cookies.get()).forEach(cookieName => {
       Cookies.remove(cookieName, { path: '/' });
     });
-    window.location.href = '/login';
+    window.location.href = '/operator/login';
   }
 
   return (
@@ -176,7 +176,7 @@ function Topbar({ onMenuToggle }: TopbarProps) {
 
           <Link href="/" className="flex items-center">
             <Image
-              src="/img/logo.svg"
+              src="/logo.svg"
               width={100}
               height={40}
               alt="Tike Logo"

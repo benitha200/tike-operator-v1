@@ -3,6 +3,8 @@
 import React, { useState, useEffect } from 'react';
 import { LineChart, XAxis, YAxis, Tooltip, Legend, Line, ResponsiveContainer } from 'recharts';
 import { Bus, CreditCard, MapPin, Users } from 'lucide-react';
+import { API_URL } from '@/constants/Constants';
+import { useRouter } from 'next/navigation';
 
 // Type definitions
 interface Location {
@@ -93,6 +95,7 @@ const Dashboard: React.FC = () => {
   const [drivers, setDrivers] = useState<any[]>([]);
   const [cars, setCars] = useState<Car[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
+  const router=useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -107,11 +110,24 @@ const Dashboard: React.FC = () => {
           'locations'
         ];
 
+        // const responses = await Promise.all(
+        //   endpoints.map(endpoint => 
+        //     fetch(`${API_URL}/${endpoint}`).then(res => res.json())
+        //   )
+        // );
         const responses = await Promise.all(
           endpoints.map(endpoint => 
-            fetch(`http://localhost:3010/${endpoint}`).then(res => res.json())
+            fetch(`${API_URL}/${endpoint}`)
+              .then(res => {
+                if (res.status === 401) {
+                  router.push('/operator/login');
+                  throw new Error('Unauthorized');
+                }
+                return res.json();
+              })
           )
         );
+
 
         const [
           bookingsData,
