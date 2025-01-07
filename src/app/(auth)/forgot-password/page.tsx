@@ -47,7 +47,7 @@ export default function ForgotPassword() {
       })
       .then((res: any) => {
         setLoading(false);
-        push("/login");
+        push("/operator/login");
       })
       .catch((error) => {
         const {
