@@ -275,6 +275,7 @@ import { Checkbox } from "@/components/ui/checkbox";
 import { Skeleton } from "@/components/ui/skeleton";
 import Link from "next/link";
 import { FiEye } from "react-icons/fi";
+import { API_URL } from "@/constants/Constants";
 
 interface Booking {
   id: string;
@@ -358,7 +359,7 @@ const Bookings = () => {
       headers: myHeaders,
     };
 
-    fetch(`${process.env.NEXT_PUBLIC_API_URL}bookings/`, requestOptions)
+    fetch(`${API_URL}bookings/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setBookings(result.payload);
