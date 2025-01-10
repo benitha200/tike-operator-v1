@@ -125,12 +125,12 @@ export default function Login() {
                     <FormItem>
                       <div className="flex">
                         <FormLabel>Your password</FormLabel>
-                        <Link
+                        {/* <Link
                           href="/forgot-password"
                           className="text-sm text-teal-500 hover:underline ml-auto"
                         >
                           Forgot your password?
-                        </Link>
+                        </Link> */}
                       </div>
                       <FormControl>
                         <Input
@@ -145,7 +145,7 @@ export default function Login() {
                   )}
                 />
 
-                <Button type="submit" disabled={loading}>
+                <Button className="w-full" type="submit" disabled={loading}>
                   {loading ? `Logging in...` : `Login`}
                 </Button>
               </form>
