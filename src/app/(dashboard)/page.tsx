@@ -271,10 +271,10 @@ const Dashboard: React.FC = () => {
               <div key={trip.id} className="flex items-center justify-between p-4 bg-gray-50 rounded">
                 <div>
                   <p className="font-semibold">
-                    {trip.departure_location.name} → {trip.arrival_location.name}
+                    {trip.departure_location?.name} → {trip.arrival_location?.name}
                   </p>
                   <p className="text-sm text-gray-500">
-                    {trip.operator.name} | {formatTime(trip.departure_time)} - {formatTime(trip.arrival_time)}
+                    {trip.operator?.name} | {formatTime(trip.departure_time)} - {formatTime(trip.arrival_time)}
                   </p>
                 </div>
                 <div className="text-right">
