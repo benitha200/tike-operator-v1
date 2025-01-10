@@ -24,7 +24,7 @@ export default function ViewCar() {
       headers: myHeaders,
     };
 
-    fetch(`${API_URL}/cars/${carId}/`, requestOptions)
+    fetch(`${API_URL}cars/${carId}/`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{
         setCar(result.payload);
@@ -69,7 +69,7 @@ export default function ViewCar() {
       body: JSON.stringify(car)
     };
   
-    fetch(`${API_URL}/cars/${car.id}/`, requestOptions)
+    fetch(`${API_URL}cars/${car.id}/`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         console.log(result);

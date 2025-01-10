@@ -77,7 +77,7 @@ export default function NewCar() {
         body:JSON.stringify(requestBody),
       };
 
-      const response = await fetch(`${API_URL}/drivers/`, requestOptions);
+      const response = await fetch(`${API_URL}drivers/`, requestOptions);
 
       if (!response.ok) {
         throw new Error(`Failed to submit the form: ${response.statusText}`);

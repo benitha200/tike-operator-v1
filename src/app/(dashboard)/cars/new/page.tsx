@@ -73,7 +73,7 @@ export default function NewCar() {
   //   };
   
   //   try {
-  //     const response = await fetch(`${API_URL}/cars/`, requestOptions);
+  //     const response = await fetch(`${API_URL}cars/`, requestOptions);
   //     if (!response.ok) {
   //       throw new Error('Network response was not ok');
   //     }
@@ -124,7 +124,7 @@ export default function NewCar() {
     };
   
     try {
-      const response = await fetch(`${API_URL}/cars/`, requestOptions);
+      const response = await fetch(`${API_URL}cars/`, requestOptions);
       if (!response.ok) {
         const errorData = await response.json();
         console.error('Error response:', errorData);

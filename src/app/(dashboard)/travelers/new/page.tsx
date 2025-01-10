@@ -32,7 +32,7 @@ export default function NewTraveler() {
         // redirect: "follow"
       };
 
-      fetch(`${API_URL}/register/`, requestOptions)
+      fetch(`${API_URL}register/`, requestOptions)
         .then((response) => response.json())
         .then((result) => console.log(result))
         .catch((error) => console.error(error)); 

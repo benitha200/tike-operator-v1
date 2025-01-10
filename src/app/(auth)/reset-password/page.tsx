@@ -58,7 +58,7 @@ export default function ResetPassword({ query }: any) {
     setLoading(true);
     setError(null);
     await axios
-      .post(`${API_URL}/reset-password`, {
+      .post(`${API_URL}reset-password`, {
         identifier,
         token: values.token,
         password: values.password,

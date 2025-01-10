@@ -53,7 +53,7 @@ export default function Backdoor() {
     setLoading(true);
     setError(null);
     await axios
-      .post(`${API_URL}/register`, {
+      .post(`${API_URL}register`, {
         idempotency_key: uuidV4(),
         fullname: values.fullname,
         identifier: values.identifier,

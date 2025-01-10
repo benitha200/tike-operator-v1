@@ -112,12 +112,12 @@ const Dashboard: React.FC = () => {
 
         // const responses = await Promise.all(
         //   endpoints.map(endpoint => 
-        //     fetch(`${API_URL}/${endpoint}`).then(res => res.json())
+        //     fetch(`${API_URL}${endpoint}`).then(res => res.json())
         //   )
         // );
         const responses = await Promise.all(
           endpoints.map(endpoint => 
-            fetch(`${API_URL}/${endpoint}`)
+            fetch(`${API_URL}${endpoint}`)
               .then(res => {
                 if (res.status === 401) {
                   router.push('/operator/login');

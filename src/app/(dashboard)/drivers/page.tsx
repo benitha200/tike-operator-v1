@@ -51,7 +51,7 @@ export default function Drivers() {
         headers: myHeaders,
       };
 
-      const response = await fetch(`${API_URL}/drivers/`, requestOptions);
+      const response = await fetch(`${API_URL}drivers/`, requestOptions);
 
       if (!response.ok) {
         throw new Error(`Failed to fetch drivers: ${response.statusText}`);

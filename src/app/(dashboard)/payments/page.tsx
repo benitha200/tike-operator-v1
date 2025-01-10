@@ -314,7 +314,7 @@ const PaymentDashboard = () => {
     const fetchPayments = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`${API_URL}/payments`);
+        const response = await fetch(`${API_URL}payments`);
         if (!response.ok) {
           throw new Error('Failed to fetch payments');
         }

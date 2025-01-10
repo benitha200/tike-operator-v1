@@ -32,7 +32,7 @@ export default function ViewDriver() {
         headers: myHeaders,
       };
 
-      fetch(`${API_URL}/drivers/${driverId}`, requestOptions)
+      fetch(`${API_URL}drivers/${driverId}`, requestOptions)
         .then((response) => response.json())
         .then((result) => {
           setData(result.payload);
@@ -70,7 +70,7 @@ export default function ViewDriver() {
       body: JSON.stringify(formData),
     };
 
-    fetch(`${API_URL}/drivers/${data.id}`, requestOptions)
+    fetch(`${API_URL}drivers/${data.id}`, requestOptions)
       .then((response) => response.json())
       .then((result) => console.log(result))
       .catch((error) => console.error(error));

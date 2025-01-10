@@ -31,7 +31,7 @@ export default function ViewTrip() {
       // redirect: "follow"
     };
 
-    fetch(`${API_URL}/locations/`, requestOptions)
+    fetch(`${API_URL}locations/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
@@ -50,7 +50,7 @@ export default function ViewTrip() {
       headers: myHeaders
     };
 
-    fetch(`${API_URL}/cars/`, requestOptions)
+    fetch(`${API_URL}cars/`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         console.log(result)
@@ -74,7 +74,7 @@ export default function ViewTrip() {
       headers: myHeaders
     };
     
-    fetch(`${API_URL}/trips/${tripId}`, requestOptions)
+    fetch(`${API_URL}trips/${tripId}`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         setTrip(result.payload);
@@ -92,7 +92,7 @@ export default function ViewTrip() {
       // redirect: "follow"
     };
 
-    fetch(`${API_URL}/drivers/`, requestOptions)
+    fetch(`${API_URL}drivers/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)

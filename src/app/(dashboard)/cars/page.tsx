@@ -168,7 +168,7 @@ export default function Cars() {
     };
 
     try {
-      const response = await fetch(`${API_URL}/cars/`, requestOptions);
+      const response = await fetch(`${API_URL}cars/`, requestOptions);
       if (!response.ok) {
         throw new Error('Failed to fetch cars');
       }
@@ -199,7 +199,7 @@ export default function Cars() {
         };
 
         try {
-          const response = await fetch(`${API_URL}/cars/${carId}`, requestOptions);
+          const response = await fetch(`${API_URL}cars/${carId}`, requestOptions);
           if (!response.ok) {
             throw new Error('Failed to delete car');
           }

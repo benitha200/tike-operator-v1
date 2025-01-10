@@ -98,7 +98,7 @@ export default function NewLocation() {
     };
 
     try {
-      const response = await fetch(`${API_URL}/locations/`, requestOptions);
+      const response = await fetch(`${API_URL}locations/`, requestOptions);
       const result = await response.json();
       console.log(result);
       toast.success("Location created successfully!");

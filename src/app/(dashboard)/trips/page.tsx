@@ -25,7 +25,7 @@ export default function Trips() {
       headers: myHeaders,
     };
 
-    fetch(`${API_URL}/trips/`, requestOptions)
+    fetch(`${API_URL}trips/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setTrips(result.payload);
@@ -49,7 +49,7 @@ export default function Trips() {
       headers: myHeaders,
     };
 
-    fetch(`${API_URL}/trips/${tripId}`, requestOptions)
+    fetch(`${API_URL}trips/${tripId}`, requestOptions)
       .then((response) => {
         if (response.ok) {
           setTrips(trips.filter(trip => trip.id !== tripId));

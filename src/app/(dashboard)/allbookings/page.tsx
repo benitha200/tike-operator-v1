@@ -54,7 +54,7 @@ function Cars() {
       headers: myHeaders,
     };
 
-    fetch(`${API_URL}/bookings/`, requestOptions)
+    fetch(`${API_URL}bookings/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setBookings(result.payload);

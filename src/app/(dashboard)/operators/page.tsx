@@ -137,7 +137,7 @@ export default function Operators() {
           headers: myHeaders,
         };
 
-        const response = await fetch(`${API_URL}/operators/`, requestOptions);
+        const response = await fetch(`${API_URL}operators/`, requestOptions);
 
         if (!response.ok) {
           throw new Error(`Failed to fetch operators: ${response.statusText}`);

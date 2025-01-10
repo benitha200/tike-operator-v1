@@ -42,7 +42,7 @@ export default function ForgotPassword() {
     setLoading(true);
     setError(null);
     await axios
-      .post(`${API_URL}/forget-password`, {
+      .post(`${API_URL}forget-password`, {
         identifier: values.identifier,
       })
       .then((res: any) => {

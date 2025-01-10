@@ -47,7 +47,7 @@ export default function ViewDriver() {
       };
 
       try {
-        const response = await fetch(`${API_URL}/drivers/${driverId}`, requestOptions);
+        const response = await fetch(`${API_URL}drivers/${driverId}`, requestOptions);
 
         if (!response.ok) {
           throw new Error(`Failed to fetch driver: ${response.statusText}`);
@@ -95,7 +95,7 @@ export default function ViewDriver() {
     };
 
     try {
-      const response = await fetch(`${API_URL}/drivers/${data.id}`, requestOptions);
+      const response = await fetch(`${API_URL}drivers/${data.id}`, requestOptions);
 
       if (!response.ok) {
         throw new Error(`Failed to update driver: ${response.statusText}`);

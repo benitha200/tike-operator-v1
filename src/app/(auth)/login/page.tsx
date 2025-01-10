@@ -48,7 +48,7 @@ export default function Login() {
     setLoading(true);
     setError(null);
     await axios
-      .post(`${API_URL}/login/`, {
+      .post(`${API_URL}login/`, {
         identifier: values.identifier,
         password: values.password,
       })

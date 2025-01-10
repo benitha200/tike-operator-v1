@@ -73,7 +73,7 @@ const EditTraveler: React.FC = () => {
         const travelerId = window.location.pathname.split('/').pop();
         if (!travelerId) throw new Error('Traveler ID not found');
 
-        const response = await fetch(`${API_URL}/travelers/${travelerId}`, {
+        const response = await fetch(`${API_URL}travelers/${travelerId}`, {
           headers: {
             Authorization: `Bearer ${Cookies.get('token')}`,
           },
@@ -122,7 +122,7 @@ const EditTraveler: React.FC = () => {
     }
 
     try {
-      const response = await fetch(`${API_URL}/travelers/${traveler.id}`, {
+      const response = await fetch(`${API_URL}travelers/${traveler.id}`, {
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",

@@ -22,7 +22,7 @@ export default function Travelers() {
       headers: myHeaders,
     };
 
-    fetch(`${API_URL}/travelers/`, requestOptions)
+    fetch(`${API_URL}travelers/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setTravelers(result.payload);

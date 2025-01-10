@@ -37,7 +37,7 @@ export default function Locations() {
       headers: myHeaders,
     };
 
-    fetch(`${API_URL}/locations/`, requestOptions)
+    fetch(`${API_URL}locations/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         setData(result.payload);
@@ -68,7 +68,7 @@ export default function Locations() {
         redirect: "follow" as RequestRedirect,
       };
 
-      fetch(`${API_URL}/locations/${locationToDelete}`, requestOptions)
+      fetch(`${API_URL}locations/${locationToDelete}`, requestOptions)
         .then((response) => response.text())
         .then((result) => {
           console.log(result);

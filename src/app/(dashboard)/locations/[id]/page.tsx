@@ -33,7 +33,7 @@ export default function EditLocation() {
     };
 
     fetch(
-      `${API_URL}/locations/${locationId}`,
+      `${API_URL}locations/${locationId}`,
       requestOptions
     )
       .then((response) => response.json())
@@ -67,7 +67,7 @@ export default function EditLocation() {
 
     try {
       const response = await fetch(
-        `${API_URL}/locations/${(location || defaultLocation).id}`,
+        `${API_URL}locations/${(location || defaultLocation).id}`,
         requestOptions
       );
       const result = await response.json();

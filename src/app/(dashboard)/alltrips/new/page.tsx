@@ -44,7 +44,7 @@ export default function NewTrip() {
     
 
     try {
-      const response = await fetch(`${API_URL}/trips/`, {
+      const response = await fetch(`${API_URL}trips/`, {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
@@ -96,7 +96,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch(`${API_URL}/cars/`, requestOptions)
+    fetch(`${API_URL}cars/`, requestOptions)
       .then((response) => response.json())
       .then((result) =>{ 
         console.log(result)
@@ -115,7 +115,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch(`${API_URL}/drivers/`, requestOptions)
+    fetch(`${API_URL}drivers/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)
@@ -135,7 +135,7 @@ export default function NewTrip() {
       // redirect: "follow"
     };
 
-    fetch(`${API_URL}/locations/`, requestOptions)
+    fetch(`${API_URL}locations/`, requestOptions)
       .then((response) => response.json())
       .then((result) => {
         console.log(result)

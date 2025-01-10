@@ -58,7 +58,7 @@ async function submitToOperators(values: z.infer<typeof formSchema>) {
     body: JSON.stringify(requestBody),
   };
 
-  const response = await fetch(`${API_URL}/operators/`, requestOptions);
+  const response = await fetch(`${API_URL}operators/`, requestOptions);
 
   if (!response.ok) {
     throw new Error(`Failed to submit to operators API: ${response.statusText}`);
@@ -92,7 +92,7 @@ async function submitToRegister(values: z.infer<typeof formSchema>, retries = 0)
   };
 
   try {
-    const response = await fetch(`${API_URL}/register/`, requestOptions);
+    const response = await fetch(`${API_URL}register/`, requestOptions);
     if (!response.ok) {
       const result = await response.json();
       if (

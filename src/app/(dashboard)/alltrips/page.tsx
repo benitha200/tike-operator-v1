@@ -19,7 +19,7 @@ export default function Trips() {
       headers: myHeaders,
     };
 
-    fetch(`${API_URL}/trips/`, requestOptions)
+    fetch(`${API_URL}trips/`, requestOptions)
       .then((response) => response.json())
       .then((result) => setTrips(result.payload))
       .catch((error) => console.error(error));
