@@ -87,6 +87,7 @@ const formatTime = (timeString: string | undefined): string => {
   return timeString;
 };
 
+
 const Dashboard: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -99,21 +100,29 @@ const Dashboard: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    // Auth check
-    const checkAuth = () => {
-      const currentUser = document.cookie.includes('currentUser');
-      const token = document.cookie.includes('token');
-      if (!currentUser || !token) {
-        router.push('/operator/login');
+    const checkAuth = async () => {
+      try {
+        // Make a request to verify authentication
+        const response = await fetch(`${API_URL}auth/verify`, {
+          credentials: 'include',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json',
+          },
+        });
+
+        if (!response.ok) {
+          throw new Error('Authentication failed');
+        }
+
+        return true;
+      } catch (error) {
+        router.push('/login');
         return false;
       }
-      return true;
     };
 
-    const fetchData = async () => {
-      // Only fetch data if authenticated
-      if (!checkAuth()) return;
-
+    const fetchDashboardData = async () => {
       try {
         const endpoints = [
           'bookings',
@@ -159,22 +168,24 @@ const Dashboard: React.FC = () => {
         setDrivers(driversData.payload || []);
         setCars(carsData.payload || []);
         setLocations(locationsData.payload || []);
-      } catch (error: unknown) {
-        if (error instanceof Error) {
-          if (error.message === 'Unauthorized') {
-            router.push('/operator/login');
-          } else {
-            console.error('Error fetching data:', error.message);
-          }
-        } else {
-          console.error('An unknown error occurred:', error);
+      } catch (error) {
+        console.error('Error fetching dashboard data:', error);
+        if (error instanceof Error && error.message === 'Unauthorized') {
+          router.push('/login');
         }
       } finally {
         setIsLoading(false);
       }
     };
 
-    fetchData();
+    const initializeDashboard = async () => {
+      const isAuthenticated = await checkAuth();
+      if (isAuthenticated) {
+        await fetchDashboardData();
+      }
+    };
+
+    initializeDashboard();
   }, [router]);
 
   const recentBookings = [...bookings]
