@@ -95,7 +95,8 @@ const Dashboard: React.FC = () => {
   const [drivers, setDrivers] = useState<any[]>([]);
   const [cars, setCars] = useState<Car[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
-  const router=useRouter();
+  const [isLoading, setIsLoading] = useState(true);
+  const router = useRouter();
 
   useEffect(() => {
     const fetchData = async () => {
@@ -110,24 +111,22 @@ const Dashboard: React.FC = () => {
           'locations'
         ];
 
-        // const responses = await Promise.all(
-        //   endpoints.map(endpoint => 
-        //     fetch(`${API_URL}${endpoint}`).then(res => res.json())
-        //   )
-        // );
         const responses = await Promise.all(
           endpoints.map(endpoint => 
-            fetch(`${API_URL}${endpoint}`)
-              .then(res => {
-                if (res.status === 401) {
-                  router.push('/operator/login');
-                  throw new Error('Unauthorized');
-                }
-                return res.json();
-              })
+            fetch(`${API_URL}${endpoint}`, {
+              credentials: 'include',
+              headers: {
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+              },
+            }).then(async res => {
+              if (res.status === 401) {
+                throw new Error('Unauthorized');
+              }
+              return res.json();
+            })
           )
         );
-
 
         const [
           bookingsData,
@@ -146,13 +145,23 @@ const Dashboard: React.FC = () => {
         setDrivers(driversData.payload || []);
         setCars(carsData.payload || []);
         setLocations(locationsData.payload || []);
-      } catch (error) {
-        console.error('Error fetching data:', error);
+      } catch (error: unknown) {
+        if (error instanceof Error) {
+          if (error.message === 'Unauthorized') {
+            router.push('/operator/login');
+          } else {
+            console.error('Error fetching data:', error.message);
+          }
+        } else {
+          console.error('An unknown error occurred:', error);
+        }
+      } finally {
+        setIsLoading(false);
       }
     };
 
     fetchData();
-  }, []);
+  }, [router]);
 
   const recentBookings = [...bookings]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
