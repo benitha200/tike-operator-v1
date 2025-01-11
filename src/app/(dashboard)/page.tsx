@@ -154,6 +154,10 @@ const Dashboard: React.FC = () => {
     fetchData();
   }, []);
 
+  const recentBookings = [...bookings]
+    .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+    .slice(0, 5);
+
   // Calculate metrics
   const totalRevenue = payments
     .filter(payment => payment.status === 'PAID')
@@ -302,7 +306,7 @@ const Dashboard: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
-              {bookings.map(booking => {
+              {recentBookings.map(booking => {
                 const trip = trips.find(t => t.id === booking.trip?.id);
                 return (
                   <tr key={booking.id}>
