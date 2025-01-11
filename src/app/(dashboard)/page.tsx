@@ -99,7 +99,21 @@ const Dashboard: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
+    // Auth check
+    const checkAuth = () => {
+      const currentUser = document.cookie.includes('currentUser');
+      const token = document.cookie.includes('token');
+      if (!currentUser || !token) {
+        router.push('/operator/login');
+        return false;
+      }
+      return true;
+    };
+
     const fetchData = async () => {
+      // Only fetch data if authenticated
+      if (!checkAuth()) return;
+
       try {
         const endpoints = [
           'bookings',
