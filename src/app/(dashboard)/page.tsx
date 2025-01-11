@@ -6,7 +6,6 @@ import { Bus, CreditCard, MapPin, Users } from 'lucide-react';
 import { API_URL } from '@/constants/Constants';
 import { useRouter } from 'next/navigation';
 
-// Type definitions
 interface Location {
   id: string;
   name: string;
@@ -62,7 +61,7 @@ interface ChartDataPoint {
   bookings: number;
 }
 
-// Utility functions
+// Utility functions remain the same
 const formatCurrency = (value: number): string => {
   return new Intl.NumberFormat('en-US', {
     style: 'currency',
@@ -87,7 +86,6 @@ const formatTime = (timeString: string | undefined): string => {
   return timeString;
 };
 
-
 const Dashboard: React.FC = () => {
   const [bookings, setBookings] = useState<Booking[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
@@ -97,12 +95,12 @@ const Dashboard: React.FC = () => {
   const [cars, setCars] = useState<Car[]>([]);
   const [locations, setLocations] = useState<Location[]>([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
   const router = useRouter();
 
   useEffect(() => {
     const checkAuth = async () => {
       try {
-        // Make a request to verify authentication
         const response = await fetch(`${API_URL}auth/verify`, {
           credentials: 'include',
           headers: {
@@ -115,6 +113,7 @@ const Dashboard: React.FC = () => {
           throw new Error('Authentication failed');
         }
 
+        setIsAuthenticated(true);
         return true;
       } catch (error) {
         router.push('/login');
@@ -135,7 +134,7 @@ const Dashboard: React.FC = () => {
         ];
 
         const responses = await Promise.all(
-          endpoints.map(endpoint => 
+          endpoints.map(endpoint =>
             fetch(`${API_URL}${endpoint}`, {
               credentials: 'include',
               headers: {
@@ -171,6 +170,7 @@ const Dashboard: React.FC = () => {
       } catch (error) {
         console.error('Error fetching dashboard data:', error);
         if (error instanceof Error && error.message === 'Unauthorized') {
+          setIsAuthenticated(false);
           router.push('/login');
         }
       } finally {
@@ -179,8 +179,8 @@ const Dashboard: React.FC = () => {
     };
 
     const initializeDashboard = async () => {
-      const isAuthenticated = await checkAuth();
-      if (isAuthenticated) {
+      const authStatus = await checkAuth();
+      if (authStatus) {
         await fetchDashboardData();
       }
     };
@@ -188,11 +188,16 @@ const Dashboard: React.FC = () => {
     initializeDashboard();
   }, [router]);
 
+  // Don't render anything until authentication is confirmed
+  if (!isAuthenticated || isLoading) {
+    return null;
+  }
+
+  // Calculate metrics and prepare data (rest of the code remains the same)
   const recentBookings = [...bookings]
     .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
     .slice(0, 5);
 
-  // Calculate metrics
   const totalRevenue = payments
     .filter(payment => payment.status === 'PAID')
     .reduce((sum, payment) => sum + parseFloat(payment.amount), 0);
@@ -201,7 +206,6 @@ const Dashboard: React.FC = () => {
     ? (payments.filter(payment => payment.status === 'PAID').length / payments.length) * 100
     : 0;
 
-  // Process booking data for chart
   const chartData: ChartDataPoint[] = Object.entries(
     bookings.reduce<Record<string, number>>((acc, booking) => {
       const date = formatDate(booking.createdAt);
@@ -213,7 +217,7 @@ const Dashboard: React.FC = () => {
     bookings: count
   }));
 
-  // Stats Card Component
+  // [StatsCard component definition remains the same...]
   interface StatsCardProps {
     title: string;
     value: string | number;
@@ -246,6 +250,7 @@ const Dashboard: React.FC = () => {
       </div>
     </div>
   );
+
 
   return (
     <div className="p-6 bg-gray-50 min-h-screen">
@@ -359,11 +364,10 @@ const Dashboard: React.FC = () => {
                       {booking.seat_number}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
-                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-                        booking.payment_status === 'PAID' 
+                      <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${booking.payment_status === 'PAID'
                           ? 'bg-green-100 text-green-800'
                           : 'bg-red-100 text-red-800'
-                      }`}>
+                        }`}>
                         {booking.payment_status}
                       </span>
                     </td>
