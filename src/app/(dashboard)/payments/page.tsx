@@ -407,7 +407,7 @@ const PaymentDashboard = () => {
       </div>
 
       <div className="flex justify-between items-center p-5 bg-white border-b border-gray-200">
-        <h2 className="text-xl font-semibold">Paid Transactions</h2>
+        <h2 className="text-xl font-semibold">Payments</h2>
         <form>
           <div className="sm:w-64 xl:w-96">
             <input
@@ -428,14 +428,14 @@ const PaymentDashboard = () => {
               <table className="table-fixed min-w-full divide-y divide-gray-200">
                 <thead className="bg-gray-100">
                   <tr>
-                    <th scope="col" className="p-4">
+                    {/* <th scope="col" className="p-4">
                       <div className="flex items-center">
                         <input
                           type="checkbox"
                           className="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"
                         />
                       </div>
-                    </th>
+                    </th> */}
                     <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
                       Transaction ID
                     </th>
@@ -451,19 +451,22 @@ const PaymentDashboard = () => {
                     <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
                       Date
                     </th>
+                    <th className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+                      Payment Status
+                    </th>
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
                   {currentPayments?.map((payment) => (
                     <tr key={payment.id} className="hover:bg-gray-100">
-                      <td className="p-4 w-4">
+                      {/* <td className="p-4 w-4">
                         <div className="flex items-center">
                           <input
                             type="checkbox"
                             className="bg-gray-50 border-gray-300 focus:ring-3 focus:ring-cyan-200 h-4 w-4 rounded"
                           />
                         </div>
-                      </td>
+                      </td> */}
                       <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
                         <div className="text-base font-semibold text-gray-900">
                           {payment.transactionId || 'N/A'}
@@ -480,6 +483,9 @@ const PaymentDashboard = () => {
                       </td>
                       <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
                         {formatDate(payment.createdAt)}
+                      </td>
+                      <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                        <span className='text-green-500 text-bold'>PAID</span>
                       </td>
                     </tr>
                   ))}

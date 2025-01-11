@@ -97,7 +97,7 @@ export default function Trips() {
                           {trip.departure_location.name}
                         </div>
                         <div className="text-sm font-normal text-gray-500">
-                          {new Date(trip.departure_time).toLocaleString()}
+                          {/* {new Date(trip.departure_time).toLocaleString()} */}
                         </div>
                       </td>
                       <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
@@ -105,7 +105,7 @@ export default function Trips() {
                           {trip.arrival_location.name}
                         </div>
                         <div className="text-sm font-normal text-gray-500">
-                          {new Date(trip.arrival_time).toLocaleString()}
+                          {/* {new Date(trip.arrival_time).toLocaleString()} */}
                         </div>
                       </td>
                       <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">

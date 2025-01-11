@@ -129,7 +129,7 @@ export default function Trips() {
                           {trip.departure_location?.name || 'N/A'}
                         </div>
                         <div className="text-sm font-normal text-gray-500">
-                          {trip.departure_time ? new Date(trip.departure_time).toLocaleString() : 'N/A'}
+                          {trip.departure_time ? trip.departure_time: 'N/A'}
                         </div>
                       </td>
                       <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
@@ -137,7 +137,7 @@ export default function Trips() {
                           {trip.arrival_location?.name || 'N/A'}
                         </div>
                         <div className="text-sm font-normal text-gray-500">
-                          {trip.arrival_time ? new Date(trip.arrival_time).toLocaleString() : 'N/A'}
+                          {trip.arrival_time ? trip.arrival_time : 'N/A'}
                         </div>
                       </td>
                       <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">

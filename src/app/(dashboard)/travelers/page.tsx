@@ -76,7 +76,7 @@ export default function Travelers() {
                     <th scope="col" className="p-4 text-left">No.</th>
                     <th scope="col" className="p-4 text-left">Fullname</th>
                     <th scope="col" className="p-4 text-left">Contacts</th>
-                    <th scope="col" className="p-4 text-left">Actions</th>
+                    {/* <th scope="col" className="p-4 text-left">Actions</th> */}
                   </tr>
                 </thead>
                 {/* Table Body */}
@@ -99,7 +99,7 @@ export default function Travelers() {
                           {traveler.email}
                         </div>
                       </td>
-                      <td className="p-4 whitespace-nowrap space-x-2">
+                      {/* <td className="p-4 whitespace-nowrap space-x-2">
                         <Link
                           href={`/travelers/${traveler.id}`}
                           className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
@@ -107,7 +107,7 @@ export default function Travelers() {
                           <FiEye className="mr-2" />
                           View
                         </Link>
-                      </td>
+                      </td> */}
                     </tr>
                   ))}
                 </tbody>
