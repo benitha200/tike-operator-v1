@@ -5,6 +5,7 @@ import { LineChart, XAxis, YAxis, Tooltip, Legend, Line, ResponsiveContainer } f
 import { Bus, CreditCard, MapPin, Users } from 'lucide-react';
 import { API_URL } from '@/constants/Constants';
 import { useRouter } from 'next/navigation';
+import Cookies from 'js-cookie';
 
 interface Location {
   id: string;
@@ -99,20 +100,16 @@ const Dashboard: React.FC = () => {
   const router = useRouter();
 
   useEffect(() => {
-    const checkAuth = async () => {
+    const checkAuth = () => {
       try {
-        const response = await fetch(`${API_URL}auth/verify`, {
-          credentials: 'include',
-          headers: {
-            'Accept': 'application/json',
-            'Content-Type': 'application/json',
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error('Authentication failed');
+        const token = Cookies.get("token");
+        const currentUser = Cookies.get("currentUser");
+        
+        if (!token || !currentUser) {
+          router.push('/login');
+          return false;
         }
-
+    
         setIsAuthenticated(true);
         return true;
       } catch (error) {
@@ -136,7 +133,6 @@ const Dashboard: React.FC = () => {
         const responses = await Promise.all(
           endpoints.map(endpoint =>
             fetch(`${API_URL}${endpoint}`, {
-              credentials: 'include',
               headers: {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
