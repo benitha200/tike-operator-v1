@@ -160,6 +160,7 @@ const Dashboard: React.FC = () => {
         setPayments(paymentsData.payload || []);
         setTravelers(travelersData.payload || []);
         setTrips(tripsData.payload || []);
+        console.log(tripsData.payload);
         setDrivers(driversData.payload || []);
         setCars(carsData.payload || []);
         setLocations(locationsData.payload || []);
