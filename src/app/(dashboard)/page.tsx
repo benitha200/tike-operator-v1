@@ -104,12 +104,12 @@ const Dashboard: React.FC = () => {
       try {
         const token = Cookies.get("token");
         const currentUser = Cookies.get("currentUser");
-        
+
         if (!token || !currentUser) {
           router.push('/login');
           return false;
         }
-    
+
         setIsAuthenticated(true);
         return true;
       } catch (error) {
@@ -341,30 +341,35 @@ const Dashboard: React.FC = () => {
               </tr>
             </thead>
             <tbody className="divide-y divide-gray-200">
+
               {recentBookings.map(booking => {
                 const trip = trips.find(t => t.id === booking.trip?.id);
+                const routeDisplay = trip && trip.departure_location && trip.arrival_location
+                  ? `${trip.departure_location.name} → ${trip.arrival_location.name}`
+                  : 'N/A';
+
                 return (
                   <tr key={booking.id}>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <div className="text-sm font-medium text-gray-900">
-                        {booking.traveler?.fullname}
+                        {booking.traveler?.fullname || 'N/A'}
                       </div>
                       <div className="text-sm text-gray-500">
-                        {booking.traveler?.phone_number}
+                        {booking.traveler?.phone_number || 'N/A'}
                       </div>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {trip ? `${trip.departure_location.name} → ${trip.arrival_location.name}` : 'N/A'}
+                      {routeDisplay}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
-                      {booking.seat_number}
+                      {booking.seat_number || 'N/A'}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap">
                       <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${booking.payment_status === 'PAID'
                           ? 'bg-green-100 text-green-800'
                           : 'bg-red-100 text-red-800'
                         }`}>
-                        {booking.payment_status}
+                        {booking.payment_status || 'PENDING'}
                       </span>
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
