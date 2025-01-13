@@ -85,7 +85,7 @@ export default function Trips() {
           />
         </div>
         <Link
-          href="/operator/trips/new"
+          href="/trips/new"
           className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2 text-center"
         >
           <FiPlus className="-ml-1 mr-2 h-6 w-6" />
