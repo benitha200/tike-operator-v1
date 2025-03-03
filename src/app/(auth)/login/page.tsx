@@ -62,11 +62,12 @@ export default function Login() {
         push("/");
       })
       .catch((error) => {
-        const {
-          data: { metaData },
-        } = error.response;
+        // const {
+        //   data: { metaData },
+        // } = error.response;
+        console.log(`${API_URL}login/`);
         setLoading(false);
-        setError(metaData.message);
+        // setError(metaData.message);
         setTimeout(() => setError(null), 5000);
       });
   };
@@ -76,7 +77,7 @@ export default function Login() {
       <div className="mx-auto md:h-screen flex flex-col justify-center items-center px-6 pt-8 pt:mt-0">
         <div className="flex justify-center items-center mb-8 lg:mb-10">
           <Image
-            src="/logo.svg"
+            src="/operator/logo.svg"
             className="h-10 mr-4"
             width={100}
             height={100}
@@ -156,3 +157,4 @@ export default function Login() {
     </>
   );
 }
+

@@ -34,7 +34,8 @@ export interface Location {
     price: number;
     departure_location: Location;
     arrival_location: Location;
-    operator: null; // Assuming operator can be null
+    operator: null; 
+    number_of_seats:number;
     car: Car;
     driver: Driver;
   }

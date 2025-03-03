@@ -160,7 +160,7 @@ const Dashboard: React.FC = () => {
         setPayments(paymentsData.payload || []);
         setTravelers(travelersData.payload || []);
         setTrips(tripsData.payload || []);
-        console.log(tripsData.payload);
+        console.log(tripsData.payload[0].departure_location.name);
         setDrivers(driversData.payload || []);
         setCars(carsData.payload || []);
         setLocations(locationsData.payload || []);
@@ -344,9 +344,12 @@ const Dashboard: React.FC = () => {
             <tbody className="divide-y divide-gray-200">
 
               {recentBookings.map(booking => {
-                const trip = trips.find(t => t.id === booking.trip?.id);
-                const routeDisplay = trip && trip.departure_location && trip.arrival_location
-                  ? `${trip.departure_location.name} → ${trip.arrival_location.name}`
+                // Get the trip information either from the booking's trip property or from the trips array
+                const bookingTrip = booking.trip || trips.find(t => t.id === booking.trip?.id);
+
+                // Create route display with null checks
+                const routeDisplay = bookingTrip
+                  ? `${bookingTrip.departure_location?.name || 'Unknown'} → ${bookingTrip.arrival_location?.name || 'Kigali'}`
                   : 'N/A';
 
                 return (

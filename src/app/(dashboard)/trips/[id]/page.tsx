@@ -8,279 +8,495 @@ import { Location } from "../interfaces";
 import { API_URL } from "@/constants/Constants";
 
 export default function ViewTrip() {
-
   const [trip, setTrip] = useState<Trip | null>(null);
-  const [cars,setCars]=useState();
-  const [selectedCar,setSelectedCar]=useState<string>("");
-  const [selectedDriver,setSelectedDriver]=useState<string>("");
-  const [drivers,setDrivers]=useState<Driver[]>([])
-  const [locations,setLocations]=useState<Location[]>([]);
+  const [cars, setCars] = useState<any[]>([]);
+  const [selectedCar, setSelectedCar] = useState<string>("");
+  const [selectedDriver, setSelectedDriver] = useState<string>("");
+  const [drivers, setDrivers] = useState<Driver[]>([]);
+  const [locations, setLocations] = useState<Location[]>([]);
   const [departureLocation, setDepartureLocation] = useState("");
+  const [departureLocationName, setDepartureLocationName] = useState("");
   const [arrivalLocation, setArrivalLocation] = useState("");
+  const [arrivalLocationName, setArrivalLocationName] = useState("");
+  const [departureTime, setDepartureTime] = useState("");
+  const [arrivalTime, setArrivalTime] = useState("");
+  const [price, setPrice] = useState("");
+  const [recurringTime, setRecurringTime] = useState("Daily");
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+  const [saving, setSaving] = useState(false);
+  const [saveSuccess, setSaveSuccess] = useState(false);
 
+  // Helper function to make API requests with retry and backoff
+  const fetchWithRetry = async (url: string, options: RequestInit, maxRetries = 3) => {
+    let retries = 0;
+    
+    while (retries < maxRetries) {
+      try {
+        const response = await fetch(url, options);
+        const data = await response.json();
+        
+        if (response.status === 429) {
+          // If rate limited, wait longer with each retry
+          const delay = 1000 * Math.pow(2, retries);
+          console.log(`Rate limited. Retrying in ${delay}ms...`);
+          await new Promise(resolve => setTimeout(resolve, delay));
+          retries++;
+        } else if (!response.ok) {
+          throw new Error(`API error: ${data.metaData?.message || response.statusText}`);
+        } else {
+          return data;
+        }
+      } catch (error) {
+        if (retries === maxRetries - 1) {
+          throw error;
+        }
+        retries++;
+        // Wait before retrying
+        const delay = 1000 * Math.pow(2, retries);
+        await new Promise(resolve => setTimeout(resolve, delay));
+      }
+    }
+  };
 
-
-
-  function get_locations(){
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
-
-    const requestOptions = {
-      method: "GET",
-      headers: myHeaders,
-      // redirect: "follow"
-    };
-
-    fetch(`${API_URL}locations/`, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result)
-        setLocations(result.payload)
-      })
-      .catch((error) => console.error(error));
-  }
-
-
-  function get_cars(){
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
-
-    const requestOptions = {
-      method: "GET",
-      headers: myHeaders
-    };
-
-    fetch(`${API_URL}cars/`, requestOptions)
-      .then((response) => response.json())
-      .then((result) =>{ 
-        console.log(result)
-        setCars(result.payload)
-      })
-      .catch((error) => console.error(error));
-  }
-
-
-
-  function get_trip(){
-    const myHeaders = new Headers();
-    myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
-
+  // Get the trip ID from the URL
+  const getTripId = () => {
     const currentUrl = window.location.href;
-    const urlParts = currentUrl.split('/');
-    const tripId = urlParts[urlParts.length - 1];
-    
+    // Remove trailing slash if present
+    const cleanUrl = currentUrl.endsWith('/') ? currentUrl.slice(0, -1) : currentUrl;
+    const urlParts = cleanUrl.split('/');
+    return urlParts[urlParts.length - 1];
+  };
+
+  // Function to get trip data
+  async function get_trip() {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
+
+    const tripId = getTripId();
+
     const requestOptions = {
       method: "GET",
       headers: myHeaders
     };
-    
-    fetch(`${API_URL}trips/${tripId}`, requestOptions)
-      .then((response) => response.json())
-      .then((result) =>{ 
-        setTrip(result.payload);
-        console.log(result)})
-      .catch((error) => console.error(error));
+
+    try {
+      const result = await fetchWithRetry(`${API_URL}trips/${tripId}`, requestOptions);
+      console.log("Trip result:", result);
+      
+      if (result) {
+        setTrip(result);
+        console.log("Trip details data")
+        console.log(result.payload);
+
+        
+        // Set initial values from trip data
+        if (result.payload.driver?.id) {
+          setSelectedDriver(result.payload.driver.id);
+        }
+        if (result.payload.car?.id) {
+          setSelectedCar(result.payload.car.id);
+        }
+        if (result.payload.departure_location?.id) {
+          setDepartureLocation(result.payload.departure_location.id);
+          setDepartureLocationName(result.payload.departure_location.name);
+        }
+        if (result.payload.arrival_location?.id) {
+          setArrivalLocation(result.payload.arrival_location.id);
+          setArrivalLocationName(result.payload.arrival_location.name);
+        }
+        if (result.payload.departure_time) {
+          setDepartureTime(result.payload.departure_time);
+        }
+        if (result.payload.arrival_time) {
+          setArrivalTime(result.payload.arrival_time);
+        }
+        if (result.payload.price) {
+          setPrice(result.payload.price.toString());
+        }
+        if (result.payload.recurring_time) {
+          setRecurringTime(result.payload.recurring_time);
+        }
+      }
+      
+      return result;
+    } catch (error) {
+      console.error("Failed to fetch trip:", error);
+      setError("Failed to load trip details. Please try again later.");
+      throw error;
+    }
   }
 
-  function get_drivers(){
+  // Function to get cars
+  async function get_cars() {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
 
     const requestOptions = {
       method: "GET",
-      headers: myHeaders,
-      // redirect: "follow"
+      headers: myHeaders
     };
 
-    fetch(`${API_URL}drivers/`, requestOptions)
-      .then((response) => response.json())
-      .then((result) => {
-        console.log(result)
-        setDrivers(result.payload)
-      
-      })
-      .catch((error) => console.error(error));
+    try {
+      const result = await fetchWithRetry(`${API_URL}cars/`, requestOptions);
+      console.log("Cars result:", result);
+      if (result.payload) {
+        setCars(Array.isArray(result.payload) ? result.payload : []);
+      }
+      return result;
+    } catch (error) {
+      console.error("Failed to fetch cars:", error);
+      return { payload: [] };
+    }
   }
 
-  useEffect(()=>{
+  // Function to get drivers
+  async function get_drivers() {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
 
-      get_trip();
-      get_cars();
-      get_drivers();
-      get_locations();
-  },[])
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders
+    };
 
+    try {
+      const result = await fetchWithRetry(`${API_URL}drivers/`, requestOptions);
+      console.log("Drivers result:", result);
+      if (result.payload) {
+        setDrivers(Array.isArray(result.payload) ? result.payload : []);
+      }
+      return result;
+    } catch (error) {
+      console.error("Failed to fetch drivers:", error);
+      return { payload: [] };
+    }
+  }
 
+  // Function to get locations
+  async function get_locations() {
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
 
-  const departure = [
-    "Bweyeye",
-    "Shyorongi",
-    "Karumuna",
-    "Rulindo",
-    "Nyagatare",
-    "Butare",
-    "Kirehe",
-    "Musanze",
-    "Nyanza",
-    "Nyabugogo",
-  ];
-  const arrival = [
-    "Nyabugogo",
-    "Nyanza",
-    "Musanze",
-    "Kirehe",
-    "Butare",
-    "Nyagatare",
-    "Rulindo",
-    "Karumuna",
-    "Shyorongi",
-    "Bweyeye",
-  ];
+    const requestOptions = {
+      method: "GET",
+      headers: myHeaders
+    };
+
+    try {
+      const result = await fetchWithRetry(`${API_URL}locations/`, requestOptions);
+      console.log("Locations result:", result);
+      if (result.payload) {
+        setLocations(Array.isArray(result.payload) ? result.payload : []);
+      }
+      return result;
+    } catch (error) {
+      console.error("Failed to fetch locations:", error);
+      return { payload: [] };
+    }
+  }
+
+  // Function to update trip
+  async function update_trip() {
+    setSaving(true);
+    setSaveSuccess(false);
+    
+    const myHeaders = new Headers();
+    myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
+    myHeaders.append("Content-Type", "application/json");
+
+    const tripId = getTripId();
+    
+    const updateData = {
+      car_id: selectedCar,
+      driver_id: selectedDriver,
+      departure_location_id: departureLocation,
+      arrival_location_id: arrivalLocation,
+      departure_time: departureTime,
+      arrival_time: arrivalTime,
+      price: parseInt(price),
+      recurring_time: recurringTime
+    };
+
+    const requestOptions = {
+      method: "PATCH",
+      headers: myHeaders,
+      body: JSON.stringify(updateData)
+    };
+    // const requestOptions = {
+    //   method: "PUT",
+    //   headers: myHeaders,
+    //   body: JSON.stringify(updateData)
+    // };
+
+    try {
+      const result = await fetchWithRetry(`${API_URL}trips/${tripId}`, requestOptions);
+      console.log("Update result:", result);
+      setSaveSuccess(true);
+      
+      // Refresh trip data
+      await get_trip();
+      
+      return result;
+    } catch (error) {
+      console.error("Failed to update trip:", error);
+      setError("Failed to save changes. Please try again.");
+      throw error;
+    } finally {
+      setSaving(false);
+      
+      // Clear success message after 3 seconds
+      if (saveSuccess) {
+        setTimeout(() => {
+          setSaveSuccess(false);
+        }, 3000);
+      }
+    }
+  }
+
+  // Load data sequentially to avoid rate limiting
+  useEffect(() => {
+    const loadData = async () => {
+      setLoading(true);
+      setError(null);
+      
+      try {
+        // Load data sequentially with delays to avoid rate limiting
+        await get_trip();
+        
+        // Wait a bit before making the next request
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Load cars
+        await get_cars();
+        
+        // Wait before next request
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Load drivers
+        await get_drivers();
+        
+        // Wait before next request
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Load locations
+        await get_locations();
+        
+      } catch (error) {
+        console.error("Error loading data:", error);
+        setError("Something went wrong. Please try refreshing the page.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadData();
+  }, []);
+
+  // Handle form submission
+  const handleSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    
+    if (!selectedCar || !selectedDriver || !departureLocation || !arrivalLocation || 
+        !departureTime || !arrivalTime || !price) {
+      setError("Please fill in all required fields");
+      return;
+    }
+    
+    try {
+      setError(null);
+      await update_trip();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="flex justify-center items-center h-screen">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-cyan-600"></div>
+        <p className="ml-3 text-lg">Loading trip details...</p>
+      </div>
+    );
+  }
 
   return (
     <>
-      <form method="get">
+      {error && (
+        <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <strong className="font-bold">Error:</strong>
+          <span className="block sm:inline"> {error}</span>
+          <button 
+            className="absolute top-0 bottom-0 right-0 px-4 py-3"
+            onClick={() => setError(null)}
+          >
+            <span className="text-red-500">×</span>
+          </button>
+        </div>
+      )}
+      
+      {saveSuccess && (
+        <div className="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert">
+          <strong className="font-bold">Success:</strong>
+          <span className="block sm:inline"> Trip updated successfully!</span>
+          <button 
+            className="absolute top-0 bottom-0 right-0 px-4 py-3"
+            onClick={() => setSaveSuccess(false)}
+          >
+            <span className="text-green-500">×</span>
+          </button>
+        </div>
+      )}
+      
+      <form onSubmit={handleSubmit}>
         <div className="flex justify-between items-center p-5 bg-white border-b border-gray-200">
           <h2 className="text-xl font-semibold">
-            Edit Trip: {`${trip && trip.departure_location.name} > ${trip && trip.arrival_location.name}`}
+            Edit Trip: {`${departureLocationName && departureLocationName} > ${arrivalLocationName && arrivalLocationName}`}
+            {/* Edit Trip: {`${trip && trip?.departure_location?.name} > ${trip && trip?.arrival_location?.name}`} */}
           </h2>
           <button
             type="submit"
-            className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2 text-center"
+            className={`text-white ${saving ? 'bg-gray-500' : 'bg-cyan-600 hover:bg-cyan-700'} focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2 text-center`}
+            disabled={saving}
           >
-            <FiCheck className="-ml-1 mr-2 h-6 w-6" />
-            Save Changes
+            {saving ? (
+              <>
+                <span className="animate-spin mr-2 h-4 w-4 border-t-2 border-b-2 border-white rounded-full"></span>
+                Saving...
+              </>
+            ) : (
+              <>
+                <FiCheck className="-ml-1 mr-2 h-6 w-6" />
+                Save Changes
+              </>
+            )}
           </button>
         </div>
         <div className="flex flex-col p-6">
           <div className="flex justify-between items-center space-x-4">
-          <div className="mb-6 w-full">
-            <label
-              htmlFor="address"
-              className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
-            >
-              Car
-            </label>
+            <div className="mb-6 w-full">
+              <label
+                htmlFor="car"
+                className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
+              >
+                Car
+              </label>
 
-            <select
-              id="country"
-              className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-              required
-              value={selectedCar} // Assuming selectedCar is the state variable holding the selected car value
-              onChange={(e) => setSelectedCar(e.target.value)}
-            >
-                {trip && (trip as { car: { id: string; car_no: string } }).car.car_no && (
-                  <option value={(trip as { car: { id: string } }).car.id}>
-                    {(trip as { car: { car_no: string } }).car.car_no}
+              <select
+                id="car"
+                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+                value={selectedCar}
+                onChange={(e) => setSelectedCar(e.target.value)}
+              >
+                <option value="">Select a car</option>
+                {cars && cars.map((car) => (
+                  <option key={car.id} value={car.id}>
+                    {car.car_no}
                   </option>
-                )}
-
-            </select>
-          </div>
+                ))}
+              </select>
+            </div>
 
             <div className="mb-6 w-full">
               <label
-                htmlFor="address"
+                htmlFor="driver"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Driver
               </label>
-          <select
-            id="country"
-            className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-            required
-            value={selectedDriver}
-            onChange={(e) => setSelectedDriver(e.target.value)}
-          >
-            {trip && trip.driver.fullname && (
-              <option value={trip.driver.id}>{trip.driver.fullname}</option>
-            )}
-            {drivers &&
-              drivers.map((driver, index) => (
-                <option key={driver.id} value={driver.id}>
-                  {driver.fullname}
-                </option>
-              ))}
-          </select>
+              <select
+                id="driver"
+                className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                required
+                value={selectedDriver}
+                onChange={(e) => setSelectedDriver(e.target.value)}
+              >
+                <option value="">Select a driver</option>
+                {drivers && drivers.map((driver) => (
+                  <option key={driver.id} value={driver.id}>
+                    {driver.fullname}
+                  </option>
+                ))}
+              </select>
             </div>
           </div>
           <div className="flex justify-between items-center space-x-4">
             <div className="mb-6 w-full">
               <label
-                htmlFor="country"
+                htmlFor="departureLocation"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Departure Location
               </label>
               <select
-                id="country"
+                id="departureLocation"
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
                 value={departureLocation}
-                onChange={(e)=>setDepartureLocation(e.target.value)}
+                onChange={(e) => setDepartureLocation(e.target.value)}
               >
-                <option>{trip && trip.departure_location.name}</option>
-                {locations && locations.map((location, index) => (
-                  <option key={location.id} value={location.id}  onClick={() => setDepartureLocation(location.id)}>{location.name}</option>
+                <option value="">Select departure location</option>
+                {locations && locations.map((location) => (
+                  <option key={location.id} value={location.id}>
+                    {location.name}
+                  </option>
                 ))}
               </select>
             </div>
             <div className="mb-6 w-full">
               <label
-                htmlFor="country"
+                htmlFor="arrivalLocation"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Arrival Location
               </label>
               <select
-                id="country"
+                id="arrivalLocation"
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
                 value={arrivalLocation}
                 onChange={(e) => setArrivalLocation(e.target.value)}
               >
-                <option>{trip && trip.arrival_location.name}</option>
-                {locations &&
-                  locations.map((location, index) => (
-                    <option key={location.id} value={location.id} onClick={() => setArrivalLocation(location.id)}>
-                      {location.name}
-                    </option>
-                  ))}
+                <option value="">Select arrival location</option>
+                {locations && locations.map((location) => (
+                  <option key={location.id} value={location.id}>
+                    {location.name}
+                  </option>
+                ))}
               </select>
             </div>
           </div>
-          
+
           <div className="flex justify-between items-center space-x-4">
             <div className="mb-6 w-full">
               <label
-                htmlFor="address"
+                htmlFor="departureTime"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Departure Time
               </label>
               <input
                 type="time"
-                id="time"
-                // placeholder="Nyabugogo"
-                value={trip && trip.departure_time 
-                  || ''
-                }
-                
+                id="departureTime"
+                value={departureTime}
+                onChange={(e) => setDepartureTime(e.target.value)}
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
               />
             </div>
             <div className="mb-6 w-full">
               <label
-                htmlFor="address"
+                htmlFor="arrivalTime"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Arrival Time
               </label>
               <input
                 type="time"
-                id="address"
-                placeholder="Nyabugogo"
+                id="arrivalTime"
+                value={arrivalTime}
+                onChange={(e) => setArrivalTime(e.target.value)}
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
               />
@@ -289,33 +505,38 @@ export default function ViewTrip() {
           <div className="flex justify-between items-center space-x-4">
             <div className="mb-6 w-full">
               <label
-                htmlFor="address"
+                htmlFor="price"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Price (in RWF)
               </label>
               <input
                 type="number"
-                id="address"
+                id="price"
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
-                value={trip && trip.price || ''}
-                // onChange={}
+                value={price}
+                onChange={(e) => setPrice(e.target.value)}
               />
             </div>
             <div className="mb-6 w-full">
               <label
-                htmlFor="address"
+                htmlFor="recurringTime"
                 className="block mb-2 text-sm font-medium text-gray-900 dark:text-white"
               >
                 Recurring Time
               </label>
               <select
-                id="country"
+                id="recurringTime"
                 className="text-sm rounded-lg block w-full p-2.5 bg-gray-50 border border-gray-300 text-gray-900 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
                 required
+                value={recurringTime}
+                onChange={(e) => setRecurringTime(e.target.value)}
               >
-                <option>Daily</option>
+                <option value="Daily">Daily</option>
+                <option value="Weekly">Weekly</option>
+                <option value="Biweekly">Biweekly</option>
+                <option value="Monthly">Monthly</option>
               </select>
             </div>
           </div>

@@ -32,14 +32,20 @@ export default function ViewDriver() {
     emergency_contact_phone_number: null
   });
 
+  const getDriverId = () => {
+    const currentUrl = window.location.href;
+    // Remove trailing slash if present
+    const cleanUrl = currentUrl.endsWith('/') ? currentUrl.slice(0, -1) : currentUrl;
+    const urlParts = cleanUrl.split('/');
+    return urlParts[urlParts.length - 1];
+  };
+
   useEffect(() => {
     const getOneDriver = async () => {
       const myHeaders = new Headers();
       myHeaders.append("Authorization", `Bearer ${Cookies.get('token')}`);
 
-      const currentUrl = window.location.href;
-      const urlParts = currentUrl.split('/');
-      const driverId = urlParts[urlParts.length - 1];
+      const driverId = getDriverId();
 
       const requestOptions = {
         method: "GET",

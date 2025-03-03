@@ -176,7 +176,7 @@ function Topbar({ onMenuToggle }: TopbarProps) {
 
           <Link href="/" className="flex items-center">
             <Image
-              src="/logo.svg"
+              src="/operator/logo.svg"
               width={100}
               height={40}
               alt="Tike Logo"
