@@ -1,73 +1,3 @@
-// "use client";
-
-// import Link from "next/link";
-// import { BiTrip } from "react-icons/bi";
-// import { GrLocation } from "react-icons/gr";
-// import {
-//   BsCardChecklist,
-//   BsCashStack,
-//   BsFilePerson,
-//   BsPeopleFill,
-//   BsShieldCheck,
-// } from "react-icons/bs";
-// import { FaBusAlt, FaHome } from "react-icons/fa";
-// import { FiBarChart, FiHelpCircle, FiSettings, FiUser } from "react-icons/fi";
-// import { IoTicketOutline } from "react-icons/io5";
-// import Footer from "./footer";
-// import Cookies from "js-cookie";
-// import { useState, useEffect } from "react";
-
-// interface Props {}
-
-// function Menu(props: Props) {
-//   const {} = props;
-
-//   const [role, setRole] = useState<string>("");
-
-//   useEffect(() => {
-//     const userRoleString = Cookies.get("currentUser");
-//     if (userRoleString) {
-//       try {
-//         const userRole = JSON.parse(userRoleString);
-//         console.log(userRole.role);
-//         setRole(userRole.role);
-//       } catch (error) {
-//         console.error('Error parsing currentUser cookie:', error);
-//       }
-//     }
-//   }, []);
-
-//   function handleLogout() {
-//     document.cookie.split(";").forEach((c) => {
-//       document.cookie = c
-//         .replace(/^ +/, "")
-//         .replace(/=.*/, `=;expires=${new Date().toUTCString()};path=/`);
-//     });
-//     window.location.reload();
-//   }
-
-//   return (
-//     <>
-//       <aside
-//         id="sidebar"
-//         className="fixed hidden z-20 h-full top-0 left-0 pt-16 flex lg:flex flex-shrink-0 flex-col w-64 transition-width duration-75"
-//         aria-label="Sidebar"
-//       >
-//         <div className="relative flex-1 flex flex-col min-h-0 border-r border-gray-200 bg-white pt-0">
-//           <div className="flex-1 flex flex-col pt-5 pb-4 overflow-y-auto">
-//             <div className="flex-1 px-3 bg-white divide-y space-y-1">
-//               {renderMenuItems(role)}
-//             </div>
-//           </div>
-//           <Footer />
-//         </div>
-//       </aside>
-//     </>
-//   );
-// }
-
-// export default Menu;
-
 "use client";
 
 import { useState, useEffect } from "react";
@@ -130,6 +60,7 @@ function Menu({ isMenuOpen, toggleMenu }: Props) {
               { href: "/drivers", icon: <BsFilePerson />, label: "Drivers" },
               { href: "/locations", icon: <GrLocation />, label: "Locations" },
               { href: "/trips", icon: <BiTrip />, label: "Trips" },
+              { href: "/routes", icon: <BiTrip />, label: "Routes" },
               { href: "/travelers", icon: <BsPeopleFill />, label: "Travelers" },
               { href: "/bookings", icon: <BsCardChecklist />, label: "Bookings" },
               { href: "/payments", icon: <BsCashStack />, label: "Payments" },
@@ -156,6 +87,7 @@ function Menu({ isMenuOpen, toggleMenu }: Props) {
             { href: "/operators", icon: <FaBusAlt />, label: "Operator" },
             { href: "/allbookings", icon: <BsFilePerson />, label: "Bookings" },
             { href: "/alltrips", icon: <GrLocation />, label: "Trips" },
+            { href: "/routes", icon: <BiTrip />, label: "Routes" }, 
           ].map((item) => (
             <li key={item.href}>
               <Link
