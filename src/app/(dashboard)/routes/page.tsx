@@ -104,7 +104,7 @@ export default function Routes() {
           />
         </div>
         <Link
-          href="/routes/new"
+          href="/routes/0" // TODO: Update this to the correct route creation page
           className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2 text-center"
         >
           <FiPlus className="-ml-1 mr-2 h-6 w-6" />

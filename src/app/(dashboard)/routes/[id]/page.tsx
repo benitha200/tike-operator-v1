@@ -8,12 +8,13 @@ import { v4 as uuidV4 } from "uuid";
 
 export default function ManageRoute() {
   const params = useParams();
-  const routeId = params?.id || null; // Ensure that 'id' is correctly retrieved from the URL
+  const routeId = params?.id && params.id !== "0" ? params.id : null; // Ensure that 'id' is correctly retrieved from the URL and set to null if it's "0"
+
 
   const [routeName, setRouteName] = useState("");
   const [departureLocation, setDepartureLocation] = useState("");  // Changed variable name to handle departure location
   const [arrivalLocation, setArrivalLocation] = useState("");      // Changed variable name to handle arrival location
-  const [stops, setStops] = useState<any[]>([]);
+  const [locations, setLocations] = useState<any[]>([]);
   const [selectedStops, setSelectedStops] = useState<any[]>([]);
   const [stopName, setStopName] = useState("");
   const [duration, setDuration] = useState("");
@@ -27,7 +28,7 @@ export default function ManageRoute() {
 
   const currencySymbol = "RWF"; // Define the currency symbol as a variable
 
-  const fetchStops = async () => {
+  const fetchLocations = async () => {
     const myHeaders = new Headers();
     myHeaders.append("Authorization", `Bearer ${Cookies.get("token")}`);
 
@@ -37,7 +38,7 @@ export default function ManageRoute() {
         headers: myHeaders,
       });
       const result = await res.json();
-      setStops(result.payload);
+      setLocations(result.payload);
     } catch (err) {
       console.error("Failed to fetch stops", err);
       setError("Failed to load stops.");
@@ -69,7 +70,7 @@ export default function ManageRoute() {
   useEffect(() => {
     if (routeId) {
       const loadData = async () => {
-        await fetchStops();
+        await fetchLocations();
         if (typeof routeId === "string") {
           await fetchRouteData(routeId); // Fetch data for the route if routeId is present
         } else {
@@ -79,7 +80,11 @@ export default function ManageRoute() {
       };
       loadData();
     } else {
-      setLoading(false); // Handle case where routeId is not available yet
+      const loadLocations = async () => {
+        await fetchLocations();
+        setLoading(false); // Handle case where routeId is not available yet
+      };
+      loadLocations();
     }
   }, [routeId]); // Only re-fetch if routeId changes
 
@@ -228,7 +233,7 @@ export default function ManageRoute() {
                 required
               >
                 <option value="">Select location</option>
-                {stops.map((stop) => (
+                {locations.map((stop) => (
                   <option key={stop.id} value={stop.id}>
                     {stop.name}
                   </option>
@@ -245,7 +250,7 @@ export default function ManageRoute() {
                 required
               >
                 <option value="">Select terminal stop</option>
-                {stops.map((stop) => (
+                {locations.map((stop) => (
                   <option key={stop.id} value={stop.id}>
                     {stop.name}
                   </option>
