@@ -90,7 +90,7 @@ export default function ManageRoute() {
 
   // Update total price and total duration whenever stops are added or removed
   useEffect(() => {
-    const newTotalPrice = selectedStops.reduce((sum, stop) => sum + parseFloat(stop.price), 0);
+    const newTotalPrice = selectedStops.reduce((max, stop) => Math.max(max, parseFloat(stop.price)), 0);
     const newTotalDuration = selectedStops.reduce((sum, stop) => sum + parseInt(stop.duration), 0);
     setTotalPrice(newTotalPrice);
     setTotalDuration(newTotalDuration);
