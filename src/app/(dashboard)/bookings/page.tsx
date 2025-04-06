@@ -19,33 +19,30 @@ import { API_URL } from "@/constants/Constants";
 interface Booking {
   id: string;
   payment_status: string;
-  departure_location: {
-    id: string;
-    name: string;
-    country: string;
-  };
-  arrival_location: {
-    id: string;
-    name: string;
-    country: string;
-  };
+  routeName: string;
+  inStopName: string;
+  outStopName: string;
+  createdAt: string;
   traveler: {
     fullname: string;
+    phone_number: string;
   };
   trip: {
-    departure_location: {
-      name: string;
-      city: string;
+    route: {
+      departure_location: {
+        name: string;
+        city: string;
+      };
+      arrival_location: {
+        name: string;
+        city: string;
+      };
     };
-    arrival_location: {
-      name: string;
-      city: string;
-    };
-    price:string;
   };
   departure_time: Date;
   arrival_time: Date;
   price: string;
+  
 }
 
 const TableSkeleton = () => {
@@ -120,7 +117,9 @@ const Bookings = () => {
     // Filter by search term if it exists
     if (searchTerm.trim() !== "") {
       result = result.filter((booking) =>
-        booking.traveler.fullname.toLowerCase().includes(searchTerm.toLowerCase())
+        booking.traveler.fullname.toLowerCase().includes(searchTerm.toLowerCase()) ||
+        booking.traveler.phone_number.toLowerCase().includes(searchTerm.toLowerCase()) 
+
       );
     }
 
@@ -196,16 +195,16 @@ const Bookings = () => {
           <thead className="bg-gray-100">
             <tr>
               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                Booking Id
+                Booked At
+              </th>
+              <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
+                Route
               </th>
               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
                 Traveler Name
               </th>
               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                Departure Location
-              </th>
-              <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
-                Arrival Location
+                Phone Number
               </th>
               <th scope="col" className="p-4 text-left text-xs font-medium text-gray-500 uppercase">
                 Price
@@ -223,25 +222,33 @@ const Bookings = () => {
               {currentBookings.map((booking) => (
                 <tr key={booking.id} className="hover:bg-gray-100">
                   <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                    {booking.id}
+                    {new Date(booking.createdAt).toLocaleDateString("en-UK", {
+                      year: "numeric",
+                      month: "short",
+                      day: "2-digit",
+                      hour: "2-digit",
+                      minute: "2-digit",
+                      hour12: false,
+                    })}
+                  </td>
+                  <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                    {booking.routeName}
                   </td>
                   <td className="p-4 whitespace-nowrap text-sm font-normal text-gray-500">
                     <div className="text-base font-semibold text-gray-900">
                       {booking.traveler.fullname}
                     </div>
                     <div className="text-sm font-normal text-gray-500">
-                      {booking.trip?.departure_location?.city} to{" "}
-                      {booking.trip?.arrival_location?.city}
+                      {booking.inStopName} to{" "}
+                      {booking.outStopName}
                     </div>
                   </td>
+                  
                   <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                    {booking.trip?.departure_location?.name}
+                    {booking.traveler.phone_number}
                   </td>
                   <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                    {booking.trip?.arrival_location?.name}
-                  </td>
-                  <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                    {booking.trip?.price}
+                    {booking.price}
                   </td>
                   <td
                     className={`p-4 whitespace-nowrap text-base font-medium ${
