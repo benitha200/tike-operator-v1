@@ -64,10 +64,18 @@ export default function Trips() {
       });
   };
 
+  // Function to calculate the arrival time
+  const calculateArrivalTime = (departureTime: string, totalDuration: number): string => {
+    const departure = new Date(`1970-01-01T${departureTime}`);
+    departure.setMinutes(departure.getMinutes() + totalDuration); // Add total_duration (in minutes)
+    const arrivalTimeStr = `${String(departure.getHours()).padStart(2, '0')}:${String(departure.getMinutes()).padStart(2, '0')}`;
+    return arrivalTimeStr; // Format the time as hh:mm
+  };
+
   const filteredTrips = trips.filter(trip => 
-    trip.departure_location?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    trip.arrival_location?.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
-    trip.driver?.fullname?.toLowerCase().includes(searchTerm.toLowerCase())
+    trip.route.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    `${trip.route.departure_location.name} -> ${trip.route.arrival_location.name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    trip.driver?.fullname.toLowerCase().includes(searchTerm.toLowerCase())
   );
 
   return (
@@ -104,10 +112,10 @@ export default function Trips() {
                       No.
                     </th>
                     <th scope="col" className="p-4 text-xs font-medium text-gray-500 uppercase">
-                      Departure
+                      Route
                     </th>
                     <th scope="col" className="p-4 text-xs font-medium text-gray-500 uppercase">
-                      Arrival
+                      Locations
                     </th>
                     <th scope="col" className="p-4 text-xs font-medium text-gray-500 uppercase">
                       Car
@@ -119,59 +127,62 @@ export default function Trips() {
                   </tr>
                 </thead>
                 <tbody className="bg-white divide-y divide-gray-200">
-                  {filteredTrips.map((trip, index) => (
-                    <tr className="hover:bg-gray-100" key={trip.id}>
-                      <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                        #{index + 1}
-                      </td>
-                      <td className="p-4 whitespace-nowrap text-base font-normal text-gray-500">
-                        <div className="text-base font-semibold text-gray-900">
-                          {trip.departure_location?.name || 'N/A'}
-                        </div>
-                        <div className="text-sm font-normal text-gray-500">
-                          {trip.departure_time ? trip.departure_time: 'N/A'}
-                        </div>
-                      </td>
-                      <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                        <div className="text-base font-semibold text-gray-900">
-                          {trip.arrival_location?.name || 'N/A'}
-                        </div>
-                        <div className="text-sm font-normal text-gray-500">
-                          {trip.arrival_time ? trip.arrival_time : 'N/A'}
-                        </div>
-                      </td>
-                      <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                        <div className="text-base font-semibold text-gray-900">
-                          {trip.car ? `${trip.car.brand} ${trip.car.model} (${trip.car.immatriculation_no})` : 'N/A'}
-                        </div>
-                        <div className="text-sm font-normal text-gray-500">
-                          Driver: {trip.driver ? trip.driver.fullname : 'N/A'}
-                        </div>
-                      </td>
-                      <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
-                        <div className="text-base font-semibold text-gray-900">
-                          {trip.price ? `${trip.price} Rwf` : 'N/A'}
-                        </div>
-                      </td>
-                      <td className="p-4 whitespace-nowrap space-x-2">
-                        <Link
-                          href={`/trips/${trip.id}`}
-                          className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
-                        >
-                          <FiEdit className="mr-2" />
-                          Edit
-                        </Link>
-                        <button
-                          type="button"
-                          onClick={() => handleDelete(trip.id)}
-                          className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
-                        >
-                          <FiTrash className="mr-2" />
-                          Delete
-                        </button>
-                      </td>
-                    </tr>
-                  ))}
+                  {filteredTrips.map((trip, index) => {
+                    const arrivalTime = trip.departure_time && trip.route.total_duration
+                      ? calculateArrivalTime(trip.departure_time, trip.route.total_duration)
+                      : 'N/A';
+
+                    return (
+                      <tr className="hover:bg-gray-100" key={trip.id}>
+                        <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                          #{index + 1}
+                        </td>
+                        <td className="p-4 whitespace-nowrap text-base font-normal text-gray-500">
+                          <div className="text-base font-semibold text-gray-900">
+                            {trip.route.name || 'N/A'}
+                          </div>
+                        </td>
+                        <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                          <div className="text-base font-semibold text-gray-900">
+                            {`${trip.route.departure_location.name} -> ${trip.route.arrival_location.name}` || 'N/A'}
+                          </div>
+                          <div className="text-sm font-normal text-gray-500">
+                            {trip.departure_time ? trip.departure_time.slice(0, 5) : 'N/A'}- {arrivalTime}
+                          </div>
+                        </td>
+                        <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                          <div className="text-base font-semibold text-gray-900">
+                            {trip.car ? `${trip.car.brand} ${trip.car.model} (${trip.car.immatriculation_no})` : 'N/A'}
+                          </div>
+                          <div className="text-sm font-normal text-gray-500">
+                            Driver: {trip.driver?.fullname || 'N/A'}
+                          </div>
+                        </td>
+                        <td className="p-4 whitespace-nowrap text-base font-medium text-gray-900">
+                          <div className="text-base font-semibold text-gray-900">
+                            {trip.route.total_price ? `${trip.route.total_price} Rwf` : 'N/A'}
+                          </div>
+                        </td>
+                        <td className="p-4 whitespace-nowrap space-x-2">
+                          <Link
+                            href={`/trips/${trip.id}`}
+                            className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
+                          >
+                            <FiEdit className="mr-2" />
+                            Edit
+                          </Link>
+                          <button
+                            type="button"
+                            onClick={() => handleDelete(trip.id)}
+                            className="text-white bg-red-700 hover:bg-red-800 focus:ring-4 focus:ring-red-300 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
+                          >
+                            <FiTrash className="mr-2" />
+                            Delete
+                          </button>
+                        </td>
+                      </tr>
+                    );
+                  })}
                 </tbody>
               </table>
             </div>

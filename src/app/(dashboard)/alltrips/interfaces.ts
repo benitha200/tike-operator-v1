@@ -1,4 +1,12 @@
-
+export interface Route{
+    id: string;
+    name: string;
+    departure_location: Location;  // Changed from originStop
+    arrival_location: Location;    // Changed from terminalStop
+    total_duration: number;         // Total duration of the route
+    total_price: number;           // Total price of the route
+  }
+  
 export interface Location {
     id: string;
     name: string;
@@ -32,11 +40,11 @@ export interface Location {
     departure_time: string;
     arrival_time: string;
     price: number;
-    departure_location: Location;
-    arrival_location: Location;
+    route: Route;
     operator: null; // Assuming operator can be null
     car: Car;
     driver: Driver;
+    trip_frequency: string;
   }
   
   export interface Operator{

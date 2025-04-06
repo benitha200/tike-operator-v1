@@ -2,7 +2,7 @@
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
-import { BiTrip } from "react-icons/bi";
+import { BiDirections, BiTrip } from "react-icons/bi";
 import { GrLocation } from "react-icons/gr";
 import {
   BsCardChecklist,
@@ -59,8 +59,8 @@ function Menu({ isMenuOpen, toggleMenu }: Props) {
               { href: "/cars", icon: <FaBusAlt />, label: "Cars" },
               { href: "/drivers", icon: <BsFilePerson />, label: "Drivers" },
               { href: "/locations", icon: <GrLocation />, label: "Locations" },
+              { href: "/routes", icon: <BiDirections />, label: "Routes" },
               { href: "/trips", icon: <BiTrip />, label: "Trips" },
-              { href: "/routes", icon: <BiTrip />, label: "Routes" },
               { href: "/travelers", icon: <BsPeopleFill />, label: "Travelers" },
               { href: "/bookings", icon: <BsCardChecklist />, label: "Bookings" },
               { href: "/payments", icon: <BsCashStack />, label: "Payments" },
