@@ -24,8 +24,7 @@ interface Car {
 
 interface Trip {
   id: string;
-  departure_location: Location;
-  arrival_location: Location;
+  route: Route;
   operator: Operator;
   departure_time: string;
   arrival_time: string;
@@ -33,7 +32,14 @@ interface Trip {
   car: Car;
   total_seats?: number;
 }
-
+interface Route {
+  id: string;
+  name: string;
+  departure_location: Location;
+  arrival_location: Location;
+  total_duration: number; // Total duration of the route
+  total_price: number;   // Total price of the route
+}
 interface Traveler {
   id: string;
   fullname: string;
@@ -44,6 +50,10 @@ interface Booking {
   id: string;
   traveler?: Traveler;
   trip?: Trip;
+  inStopName?: string;
+  outStopName?: string;
+  departure_time: string;
+  arrival_time: string;
   seat_number: string;
   payment_status: 'PAID' | 'PENDING' | 'FAILED';
   price: number;
@@ -311,14 +321,14 @@ const Dashboard: React.FC = () => {
               <div key={trip.id} className="flex items-center justify-between p-4 bg-gray-50 rounded">
                 <div>
                   <p className="font-semibold">
-                    {trip.departure_location?.name} → {trip.arrival_location?.name}
+                    {trip.route.departure_location.name} → {trip.route.arrival_location.name}
                   </p>
                   <p className="text-sm text-gray-500">
                     {trip.operator?.name} | {formatTime(trip.departure_time)} - {formatTime(trip.arrival_time)}
                   </p>
                 </div>
                 <div className="text-right">
-                  <p className="font-semibold">{formatCurrency(trip.price)}</p>
+                  <p className="font-semibold">{formatCurrency(trip.route.total_price)}</p>
                   <p className="text-sm text-gray-500">{trip.total_seats || trip.car.number_of_seats} seats</p>
                 </div>
               </div>
@@ -336,6 +346,7 @@ const Dashboard: React.FC = () => {
               <tr className="bg-gray-50">
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Traveler</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Route</th>
+                <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Stations</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Seat</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Status</th>
                 <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase">Amount</th>
@@ -345,12 +356,18 @@ const Dashboard: React.FC = () => {
 
               {recentBookings.map(booking => {
                 // Get the trip information either from the booking's trip property or from the trips array
-                const bookingTrip = booking.trip || trips.find(t => t.id === booking.trip?.id);
-
+                const bookingTrip = trips.find(t => t.id === booking.trip?.id);
+                
                 // Create route display with null checks
-                const routeDisplay = bookingTrip
-                  ? `${bookingTrip.departure_location?.name || 'Unknown'} → ${bookingTrip.arrival_location?.name || 'Kigali'}`
+                // const routeDisplay = bookingTrip
+                //   ? `${bookingTrip.route?.departure_location.name || 'Unknown'} → ${bookingTrip.route?.arrival_location.name || 'Unknown'}`
+                //   : 'N/A';
+                const routeDisplay = bookingTrip?.route.name
+                  ? bookingTrip.route.name
                   : 'N/A';
+
+                  const stopDisplay = booking.inStopName && booking.outStopName
+                  ? `${booking.inStopName} → ${booking.outStopName}` : 'N/A';
 
                 return (
                   <tr key={booking.id}>
@@ -364,6 +381,9 @@ const Dashboard: React.FC = () => {
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {routeDisplay}
+                    </td>
+                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                      {stopDisplay}
                     </td>
                     <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
                       {booking.seat_number || 'N/A'}
