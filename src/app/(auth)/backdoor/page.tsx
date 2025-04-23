@@ -58,6 +58,7 @@ export default function Backdoor() {
         fullname: values.fullname,
         identifier: values.identifier,
         password: values.password,
+        role: "traveler",
       })
       .then((res: any) => {
         const { token, user } = res.data.payload;

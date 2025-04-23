@@ -8,7 +8,9 @@ import {
   BsCardChecklist,
   BsCashStack,
   BsFilePerson,
+  BsKey,
   BsPeopleFill,
+  BsRocketTakeoff,
 } from "react-icons/bs";
 import { FaBusAlt, FaHome } from "react-icons/fa";
 import { FiHelpCircle, FiUser, FiX } from "react-icons/fi";
@@ -26,7 +28,15 @@ function Menu({ isMenuOpen, toggleMenu }: Props) {
 
   useEffect(() => {
     setMounted(true);
-    const userRoleString = Cookies.get("currentUser");
+    const userJSONString = Cookies.get("currentUser");
+    // parse the json string 
+    let userRoleString = "";
+    if (userJSONString) {
+      const user = JSON.parse(userJSONString);
+      userRoleString = JSON.stringify({ role: user.role });
+    }
+   
+    
     if (userRoleString) {
       try {
         const userRole = JSON.parse(userRoleString);
@@ -46,11 +56,11 @@ function Menu({ isMenuOpen, toggleMenu }: Props) {
     Object.keys(Cookies.get()).forEach(cookieName => {
       Cookies.remove(cookieName, { path: '/' });
     });
-    window.location.reload();
+     window.location.href = '/operator/login';
   }
-
+  debugger;
   const renderMenuItems = (roleType: string) => {
-    if (roleType === "operator") {
+    if (roleType === "operator" || roleType === "admin" || roleType === "manager") {
       return (
         <>
           <ul className="space-y-2 pb-2">
@@ -64,6 +74,9 @@ function Menu({ isMenuOpen, toggleMenu }: Props) {
               { href: "/travelers", icon: <BsPeopleFill />, label: "Travelers" },
               { href: "/bookings", icon: <BsCardChecklist />, label: "Bookings" },
               { href: "/payments", icon: <BsCashStack />, label: "Payments" },
+              { href: "/users", icon: <BsPeopleFill />, label: "Users" },
+              // { href: "/roles", icon: <BsKey/> , label: "Roles" },
+              // { href: "/settings", icon: <BsRocketTakeoff />, label: "Settings" },
             ].map((item) => (
               <li key={item.href}>
                 <Link
@@ -100,7 +113,7 @@ function Menu({ isMenuOpen, toggleMenu }: Props) {
               </Link>
             </li>
           ))}
-          <li>
+          {/* <li>
             <Link
               href="/operator/login"
               className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75"
@@ -112,7 +125,7 @@ function Menu({ isMenuOpen, toggleMenu }: Props) {
               <FiUser />
               <span className="ml-3">Logout</span>
             </Link>
-          </li>
+          </li> */}
         </ul>
       );
     }

@@ -30,6 +30,7 @@ export function middleware(req: NextRequest) {
     "/locations",
     "/trips",
     "/travelers",
+    "/users",
     "/bookings",
     "/settings",
     "/profile",
