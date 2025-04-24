@@ -56,7 +56,7 @@ function Menu({ isMenuOpen, toggleMenu }: Props) {
     Object.keys(Cookies.get()).forEach(cookieName => {
       Cookies.remove(cookieName, { path: '/' });
     });
-     window.location.href = '/operator/login';
+     window.location.href = '/login';
   }
   debugger;
   const renderMenuItems = (roleType: string) => {
@@ -115,7 +115,7 @@ function Menu({ isMenuOpen, toggleMenu }: Props) {
           ))}
           {/* <li>
             <Link
-              href="/operator/login"
+              href="/login"
               className="text-base text-gray-900 font-normal rounded-lg flex items-center p-2 group hover:bg-gray-100 transition duration-75"
               onClick={() => {
                 handleLogout();

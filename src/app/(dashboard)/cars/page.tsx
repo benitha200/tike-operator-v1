@@ -252,7 +252,7 @@ export default function Cars() {
             placeholder="Search for a car"
           />
         </div>
-        <a href="/operator/cars/new"
+        <a href="/cars/new"
           className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium inline-flex items-center rounded-lg text-sm px-3 py-2 text-center"
         >
           <FiPlus className="-ml-1 mr-2 h-6 w-6" />
@@ -298,7 +298,7 @@ export default function Cars() {
                           </div>
                         </td>
                         <td className="p-4 whitespace-nowrap space-x-2">
-                          <a href={`/operator/cars/${car.id}`}
+                          <a href={`/cars/${car.id}`}
                             className="text-white bg-cyan-600 hover:bg-cyan-700 focus:ring-4 focus:ring-cyan-200 font-medium rounded-lg text-sm inline-flex items-center px-3 py-2 text-center"
                           >
                             <FiEdit className="mr-2" />

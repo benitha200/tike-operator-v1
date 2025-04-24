@@ -53,7 +53,7 @@ export function middleware(req: NextRequest) {
   ) {
     req.cookies.delete("currentUser");
     req.cookies.delete("token");
-    const res = NextResponse.redirect(new URL("/operator/login", req.nextUrl));
+    const res = NextResponse.redirect(new URL("/login", req.nextUrl));
     res.cookies.delete("currentUser");
     res.cookies.delete("token");
     return res;
